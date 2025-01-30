@@ -1,0 +1,60 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <flow-layout direction="vertical">
+                    <children>
+                        <flow-layout direction="horizontal">
+                            <children>
+                                <text-box>
+                                    <sizing>
+                                        <horizontal method="fixed">50</horizontal>
+                                    </sizing>
+                                </text-box>
+
+                                <button>
+                                    <text>Search</text>
+                                </button>
+                            </children>
+
+                            <horizontal-alignment>left</horizontal-alignment>
+                            <vertical-alignment>center</vertical-alignment>
+
+                            <padding>
+                                <bottom>5</bottom>
+                            </padding>
+
+                        </flow-layout>
+
+                        <grid-layout rows="5" columns="7" id="heads">
+                            <children />
+
+                            <padding>
+                                <top>1</top>
+                            </padding>
+                        </grid-layout>
+                    </children>
+
+                    <horizontal-alignment>left</horizontal-alignment>
+                    <vertical-alignment>center</vertical-alignment>
+
+                    <padding>
+                        <all>20</all>
+                    </padding>
+
+                    <surface>
+                        <panel dark="true"/>
+                    </surface>
+                </flow-layout>
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <surface>
+                <options-background />
+            </surface>
+        </flow-layout>
+    </components>
+</owo-ui>

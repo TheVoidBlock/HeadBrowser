@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "headbrowser",
+  "version": "${version}",
+  "name": "HeadBrowser",
+  "description": "TODO",
+  "authors": [],
+  "contact": {},
+  "license": "GPL-3.0",
+  "icon": "assets/headbrowser/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "io.github.thevoidblock.headbrowser.HeadBrowser"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  },
+  "mixins": [
+    "headbrowser.mixins.json"
+  ]
+}

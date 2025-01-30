@@ -1,0 +1,44 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <flow-layout direction="vertical">
+                    <children>
+                        <label id="message">
+                            <margins>
+                                <all>10</all>
+                            </margins>
+                        </label>
+                        <button id="ok">
+                            <text>Ok</text>
+
+                            <sizing>
+                                <horizontal method="fixed">40</horizontal>
+                            </sizing>
+                        </button>
+                    </children>
+
+                    <padding>
+                        <all>20</all>
+                    </padding>
+
+                    <surface>
+                        <panel dark="true"/>
+                    </surface>
+
+                    <vertical-alignment>center</vertical-alignment>
+                    <horizontal-alignment>center</horizontal-alignment>
+
+                </flow-layout>
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <surface>
+                <options-background />
+            </surface>
+        </flow-layout>
+    </components>
+</owo-ui>
