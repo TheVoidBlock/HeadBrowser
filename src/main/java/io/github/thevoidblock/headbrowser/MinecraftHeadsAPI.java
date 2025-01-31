@@ -32,7 +32,7 @@ public class MinecraftHeadsAPI {
 
     public static HEADS HEADS = new HEADS();
 
-    private static void downloadDatabase() {
+    private static boolean downloadDatabase() {
 
         LOGGER.info("Starting Head database download...");
 
@@ -61,18 +61,21 @@ public class MinecraftHeadsAPI {
                 heads = Stream.concat(heads.stream(), categoryHeads.stream()).toList();
             }
         } catch (IOException e) {
-            String errorMessage = "Failed to execute HTTP request due to an I/O error.";
-            presentError(errorMessage, e.toString());
-            throw new RuntimeException(errorMessage, e);
+            String errorMessage = "Failed to execute HTTP request due to an I/O error. You are likely not connected to the internet.";
+            LOGGER.error(errorMessage, e);
+            LOGGER.info("Failed to download head database");
+            return false;
         } catch (IllegalStateException e) {
             String errorMessage = "Minecraft Heads returned an unexpected data structure.";
-            presentError(errorMessage, e.toString());
-            throw new RuntimeException(errorMessage, e);
+            LOGGER.error(errorMessage, e);
+            return false;
         }
 
         LOGGER.info("Finished Head database download");
 
         HEADS.heads = heads;
+
+        return true;
     }
 
     private static void saveHeads() {
@@ -104,8 +107,7 @@ public class MinecraftHeadsAPI {
     }
 
     public static void downloadAndSaveHeads() {
-        downloadDatabase();
-        saveHeads();
+        if(downloadDatabase()) saveHeads();
     }
 
     public record Head(String name, String value, String[] tags, CATEGORY category, UUID uuid) {
