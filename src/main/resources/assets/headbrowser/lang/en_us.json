@@ -1,5 +1,5 @@
 {
-  "chat.headbrowser.skin-equip": "Successfully equip %s as a skin! Relog to apply.",
+  "chat.headbrowser.skin-equip": "Equip %s as a skin! Relog to apply.",
   "chat.headbrowser.skin-fail": "Failed to change skin. You are likely on a cracked account, or not connected to the internet.",
 
   "tooltip.headbrowser.head-options": "Left Click - Get head (Creative only)\nRight Click - Equip head as skin",
