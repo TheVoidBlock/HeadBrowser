@@ -31,6 +31,8 @@ public class HeadBrowser implements ClientModInitializer {
             LOGGER.info("Heads cache expired. Downloading new heads");
             MinecraftHeadsAPI.downloadAndSaveHeads();
         }
+
+        KeyBindings.registerBindFunctions();
     }
 
     public static void presentError(String message, String error) {
