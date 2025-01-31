@@ -3,9 +3,15 @@
   "id": "headbrowser",
   "version": "${version}",
   "name": "HeadBrowser",
-  "description": "TODO",
-  "authors": [],
-  "contact": {},
+  "description": "Client side mod to browse the head database",
+  "authors": [
+    "TheVoidBlock"
+  ],
+  "contact": {
+    "homepage": "modrinth.com/mod/HeadBrowser",
+    "sources": "https://github.com/thevoidblock/HeadBrowser",
+    "issues": "https://github.com/thevoidblock/HeadBrowser/issues"
+  },
   "license": "GPL-3.0",
   "icon": "assets/headbrowser/icon.png",
   "environment": "client",
