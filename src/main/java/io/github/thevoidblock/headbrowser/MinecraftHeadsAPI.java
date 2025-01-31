@@ -108,29 +108,16 @@ public class MinecraftHeadsAPI {
         saveHeads();
     }
 
-    public static class Head {
-        public final String name;
-        public final String value;
-        public final String[] tags;
-        public final CATEGORY category;
-        public final UUID uuid;
-
-        public Head(String name, String value, String[] tags, CATEGORY category, UUID uuid) {
-            this.name = name;
-            this.value = value;
-            this.tags = tags;
-            this.category = category;
-            this.uuid = uuid;
-        }
+    public record Head(String name, String value, String[] tags, CATEGORY category, UUID uuid) {
 
         public ItemStack toItem() {
-            ItemStack head = Items.PLAYER_HEAD.getDefaultStack();
-            GameProfile profile = new GameProfile(this.uuid, this.name.replaceAll(" ", ""));
-            profile.getProperties().put("textures", new Property("textures", this.value));
-            head.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
-            return head;
+                ItemStack head = Items.PLAYER_HEAD.getDefaultStack();
+                GameProfile profile = new GameProfile(this.uuid, this.name.replaceAll(" ", ""));
+                profile.getProperties().put("textures", new Property("textures", this.value));
+                head.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
+                return head;
+            }
         }
-    }
 
     public enum CATEGORY implements StringIdentifiable {
         ALPHABET("Alphabet"),

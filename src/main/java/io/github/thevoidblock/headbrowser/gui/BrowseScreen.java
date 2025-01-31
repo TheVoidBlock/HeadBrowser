@@ -195,7 +195,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         headComponent.mouseDown().subscribe((mouseX, mouseY, button) -> {
             switch (button) {
                 case 1 -> {
-                    String skinValue = head.value;
+                    String skinValue = head.value();
                     byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);
                     String skinValueDecoded = new String(skinValueDecodedBytes, UTF_8);
                     String skinURLString = GSON.fromJson(skinValueDecoded, JsonObject.class)
@@ -216,8 +216,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
                     if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
                     if (CLIENT.player != null)
-                        CLIENT.player.sendMessage(Text.translatable("chat.headbrowser.skin-equip", head.name));
-                    else CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-equip", head.name)));
+                        CLIENT.player.sendMessage(Text.translatable("chat.headbrowser.skin-equip", head.name()));
+                    else CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-equip", head.name())));
                 }
 
                 case 0 -> {
@@ -234,7 +234,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     private static void createHeadComponentTooltip(ItemComponent headComponent, MinecraftHeadsAPI.Head head) {
-        headComponent.tooltip(Styler.StyleHeadTooltip(head.name, head.category, head.tags));
+        headComponent.tooltip(Styler.StyleHeadTooltip(head.name(), head.category(), head.tags()));
     }
 
     private static class PageList {
@@ -291,9 +291,9 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             return heads.stream().filter(head -> {
                 String[] keywords = searchQuery.toLowerCase().split(" ");
                 int matchedKeywords = 0;
-                for(String keyword : keywords) if(head.name.toLowerCase().contains(keyword)) matchedKeywords++;
+                for(String keyword : keywords) if(head.name().toLowerCase().contains(keyword)) matchedKeywords++;
                 boolean tagMatches = false;
-                for(String tag : head.tags) for(String keyword : keywords) if(tag.toLowerCase().contains(keyword)) {
+                for(String tag : head.tags()) for(String keyword : keywords) if(tag.toLowerCase().contains(keyword)) {
                     tagMatches = true;
                     break;
                 }
@@ -315,7 +315,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         }
 
         public List<MinecraftHeadsAPI.Head> filterCategories(List<MinecraftHeadsAPI.Head> heads) {
-            return heads.stream().filter(head -> categories.getOrDefault(head.category, true)).toList();
+            return heads.stream().filter(head -> categories.getOrDefault(head.category(), true)).toList();
         }
     }
 
