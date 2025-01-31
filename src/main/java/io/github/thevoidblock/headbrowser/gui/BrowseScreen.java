@@ -11,6 +11,7 @@ import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.*;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.container.GridLayout;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -189,31 +190,40 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     private static ItemComponent getHeadComponent(MinecraftHeadsAPI.Head head) {
-        ItemComponent headComponent = Components.item(head.toItem());
+        ItemStack headItem = head.toItem();
+        ItemComponent headComponent = Components.item(headItem);
         headComponent.mouseDown().subscribe((mouseX, mouseY, button) -> {
-            if(button == 1) {
-                String skinValue = head.value;
-                byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);
-                String skinValueDecoded = new String(skinValueDecodedBytes, UTF_8);
-                String skinURLString = GSON.fromJson(skinValueDecoded, JsonObject.class)
-                        .get("textures").getAsJsonObject()
-                        .get("SKIN").getAsJsonObject()
-                        .get("url").getAsJsonPrimitive().getAsString();
+            switch (button) {
+                case 1 -> {
+                    String skinValue = head.value;
+                    byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);
+                    String skinValueDecoded = new String(skinValueDecodedBytes, UTF_8);
+                    String skinURLString = GSON.fromJson(skinValueDecoded, JsonObject.class)
+                            .get("textures").getAsJsonObject()
+                            .get("SKIN").getAsJsonObject()
+                            .get("url").getAsJsonPrimitive().getAsString();
 
-                URL skinURL;
-                try {
-                    skinURL = URI.create(skinURLString).toURL();
-                } catch (MalformedURLException e) {
-                    String errorMessage = "Attempted to equip skin, but the url was malformed";
-                    presentError(errorMessage, e.toString());
-                    throw new RuntimeException(errorMessage, e);
+                    URL skinURL;
+                    try {
+                        skinURL = URI.create(skinURLString).toURL();
+                    } catch (MalformedURLException e) {
+                        String errorMessage = "Attempted to equip skin, but the url was malformed";
+                        presentError(errorMessage, e.toString());
+                        throw new RuntimeException(errorMessage, e);
+                    }
+
+                    SkinChanger.changeSkin(SkinChanger.SKIN_VARIANT.SLIM, skinURL);
+
+                    if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
+                    if (CLIENT.player != null)
+                        CLIENT.player.sendMessage(Text.translatable("chat.headbrowser.skin-equip", head.name));
+                    else CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-equip", head.name)));
                 }
 
-                SkinChanger.changeSkin(SkinChanger.SKIN_VARIANT.SLIM, skinURL);
-
-                if(CLIENT.currentScreen != null) CLIENT.currentScreen.close();
-                if(CLIENT.player != null) CLIENT.player.sendMessage(Text.translatable("chat.headbrowser.skin-equip", head.name));
-                else CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-equip", head.name)));
+                case 0 -> {
+                    if(CLIENT.currentScreen != null) CLIENT.currentScreen.close();
+                    getItem(headItem);
+                }
             }
             return true;
         });

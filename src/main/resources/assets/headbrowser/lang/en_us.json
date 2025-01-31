@@ -3,5 +3,7 @@
   "chat.headbrowser.skin-fail": "Failed to change skin. You are likely on a cracked account, or not connected to the internet.",
 
   "tooltip.headbrowser.head-options": "Left Click - Get head (Creative only)\nRight Click - Equip head as skin",
-  "tooltip.headbrowser.head-category-tags": "#%s\ntags: %s"
+  "tooltip.headbrowser.head-category-tags": "#%s\ntags: %s",
+
+  "alert.headbrowser.head-category-tags": "Cannot get item, as you are not in a world."
 }

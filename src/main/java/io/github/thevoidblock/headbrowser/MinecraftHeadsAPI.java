@@ -125,8 +125,8 @@ public class MinecraftHeadsAPI {
 
         public ItemStack toItem() {
             ItemStack head = Items.PLAYER_HEAD.getDefaultStack();
-            GameProfile profile = new GameProfile(this.uuid, this.name);
-            profile.getProperties().put("textures", new Property("value", this.value));
+            GameProfile profile = new GameProfile(this.uuid, this.name.replaceAll(" ", ""));
+            profile.getProperties().put("textures", new Property("textures", this.value));
             head.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
             return head;
         }

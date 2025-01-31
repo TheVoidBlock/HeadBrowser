@@ -7,8 +7,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
@@ -29,7 +31,7 @@ public class HeadBrowser implements ClientModInitializer {
 
         if(!MinecraftHeadsAPI.readHeads()) {
             MinecraftHeadsAPI.downloadAndSaveHeads();
-        };
+        }
 
         if(currentTimeMillis() - MinecraftHeadsAPI.HEADS.downloadTime > CACHE_EXPIRATION_PERIOD) {
             LOGGER.info("Heads cache expired. Downloading new heads");
@@ -85,5 +87,14 @@ public class HeadBrowser implements ClientModInitializer {
 
     public static void presentError(String message, String error) {
         CLIENT.setScreen(new ErrorScreen(message, error));
+    }
+
+    public static void getItem(ItemStack item) {
+        if(CLIENT.player != null) {
+            CLIENT.setScreen(new InventoryScreen(CLIENT.player));
+            CLIENT.player.currentScreenHandler.setCursorStack(item);
+        } else {
+            CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.head-category-tags")));
+        }
     }
 }
