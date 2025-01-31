@@ -2,5 +2,6 @@
   "chat.headbrowser.skin-equip": "Successfully equip %s as a skin! Relog to apply.",
   "chat.headbrowser.skin-fail": "Failed to change skin. You are likely on a cracked account, or not connected to the internet.",
 
-  "tooltip.headbrowser.head": "Left Click - Equip head as skin\nRight click - Add head to favourites\nMiddle Click - Get head (Creative only)"
+  "tooltip.headbrowser.head-options": "Left Click - Equip head as skin\nRight click - Add head to favourites\nMiddle Click - Get head (Creative only)",
+  "tooltip.headbrowser.head-category-tags": "#%s\ntags: %s"
 }

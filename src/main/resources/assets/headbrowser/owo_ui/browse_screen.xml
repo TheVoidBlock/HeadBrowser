@@ -7,36 +7,137 @@
                     <children>
                         <flow-layout direction="horizontal">
                             <children>
-                                <text-box>
-                                    <sizing>
-                                        <horizontal method="fixed">50</horizontal>
-                                    </sizing>
-                                </text-box>
+                                <flow-layout direction="vertical">
+                                    <children>
+                                        <flow-layout direction="horizontal">
+                                            <children>
+                                                <text-box id="search-box">
+                                                    <sizing>
+                                                        <horizontal method="fixed">95</horizontal>
+                                                    </sizing>
+                                                </text-box>
 
-                                <button>
-                                    <text>🔎</text>
+                                                <button id="search-button">
+                                                    <text>🔎</text>
+                                                </button>
+                                            </children>
+
+                                            <horizontal-alignment>center</horizontal-alignment>
+                                            <vertical-alignment>center</vertical-alignment>
+
+                                            <padding>
+                                                <all>5</all>
+                                            </padding>
+
+                                            <margins>
+                                                <bottom>5</bottom>
+                                            </margins>
+
+                                            <surface>
+                                                <panel dark="true"/>
+                                            </surface>
+
+                                        </flow-layout>
+
+                                        <grid-layout rows="6" columns="7" id="heads">
+                                            <children />
+
+                                            <padding>
+                                                <all>5
+                                                </all>
+                                            </padding>
+
+                                            <surface>
+                                                <panel dark="true"/>
+                                            </surface>
+                                        </grid-layout>
+
+                                    </children>
+                                </flow-layout>
+
+                                <flow-layout direction="vertical" id="categories">
+                                    <children />
+
+                                    <sizing>
+                                        <vertical method="fixed">143</vertical>
+                                    </sizing>
+
+                                    <margins>
+                                        <horizontal>5</horizontal>
+                                    </margins>
+
+                                    <padding>
+                                        <all>6</all>
+                                    </padding>
+
+                                    <surface>
+                                        <panel dark="true"/>
+                                    </surface>
+
+                                    <vertical-alignment>center</vertical-alignment>
+                                </flow-layout>
+
+                            </children>
+                        </flow-layout>
+
+                        <flow-layout direction="horizontal">
+                            <children>
+                                <button id="previous-page">
+                                    <text>&lt;</text>
+                                </button>
+
+                                <flow-layout direction="horizontal" id="pages-left-section">
+                                    <children />
+
+                                    <horizontal-alignment>center</horizontal-alignment>
+                                    <vertical-alignment>center</vertical-alignment>
+
+                                    <margins>
+                                        <left>5</left>
+                                    </margins>
+                                </flow-layout>
+
+                                <flow-layout direction="horizontal" id="pages-middle-section">
+                                    <children />
+
+                                    <horizontal-alignment>center</horizontal-alignment>
+                                    <vertical-alignment>center</vertical-alignment>
+                                </flow-layout>
+
+                                <flow-layout direction="horizontal" id="pages-right-section">
+                                    <children />
+
+                                    <horizontal-alignment>center</horizontal-alignment>
+                                    <vertical-alignment>center</vertical-alignment>
+
+                                    <margins>
+                                        <right>5</right>
+                                    </margins>
+                                </flow-layout>
+
+                                <button id="next-page">
+                                    <text>&gt;</text>
                                 </button>
                             </children>
 
-                            <horizontal-alignment>left</horizontal-alignment>
+                            <horizontal-alignment>right</horizontal-alignment>
                             <vertical-alignment>center</vertical-alignment>
 
+                            <margins>
+                                <all>5</all>
+                            </margins>
+
                             <padding>
-                                <bottom>5</bottom>
+                                <all>5</all>
                             </padding>
 
+                            <surface>
+                                <panel dark="true"/>
+                            </surface>
                         </flow-layout>
-
-                        <grid-layout rows="5" columns="7" id="heads">
-                            <children />
-
-                            <padding>
-                                <top>1</top>
-                            </padding>
-                        </grid-layout>
                     </children>
 
-                    <horizontal-alignment>left</horizontal-alignment>
+                    <horizontal-alignment>center</horizontal-alignment>
                     <vertical-alignment>center</vertical-alignment>
 
                     <padding>
