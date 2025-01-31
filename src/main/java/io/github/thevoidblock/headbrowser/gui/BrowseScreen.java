@@ -191,7 +191,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     private static ItemComponent getHeadComponent(MinecraftHeadsAPI.Head head) {
         ItemComponent headComponent = Components.item(head.toItem());
         headComponent.mouseDown().subscribe((mouseX, mouseY, button) -> {
-            if(button == 0) {
+            if(button == 1) {
                 String skinValue = head.value;
                 byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);
                 String skinValueDecoded = new String(skinValueDecodedBytes, UTF_8);
