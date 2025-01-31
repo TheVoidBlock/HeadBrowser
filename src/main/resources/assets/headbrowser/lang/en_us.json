@@ -8,5 +8,7 @@
   "alert.headbrowser.head-category-tags": "Cannot get item, as you are not in a world.",
 
   "category.headbrowser.screens": "Head Browser",
-  "key.headbrowser.browse": "Open head browser"
+  "key.headbrowser.browse": "Open head browser",
+
+  "confirm.headbrowser.open-issues": "Open github issues"
 }

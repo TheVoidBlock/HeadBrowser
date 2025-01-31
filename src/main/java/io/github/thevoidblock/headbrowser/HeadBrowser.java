@@ -17,6 +17,7 @@ public class HeadBrowser implements ClientModInitializer {
     public static final String MOD_ID = "headbrowser";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    public static final String ISSUES_URL = "https://github.com/TheVoidBlock/HeadBrowser/issues/new";
 
     public static final long CACHE_EXPIRATION_PERIOD = 86400000;
 

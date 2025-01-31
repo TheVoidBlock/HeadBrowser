@@ -35,9 +35,21 @@
                             </padding>
                         </scroll>
 
-                        <button id="copy">
-                            <text>Copy to clipboard</text>
-                        </button>
+                        <flow-layout direction="horizontal">
+                            <children>
+                                <button id="copy">
+                                    <text>Copy to clipboard</text>
+
+                                    <margins>
+                                        <right>5</right>
+                                    </margins>
+                                </button>
+
+                                <button id="issues">
+                                    <text>Create bug report (GitHub Issues)</text>
+                                </button>
+                            </children>
+                        </flow-layout>
                     </children>
 
                     <padding>

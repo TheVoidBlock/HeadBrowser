@@ -5,15 +5,12 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
-import net.minecraft.client.util.Clipboard;
+import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
-
-import static io.github.thevoidblock.headbrowser.HeadBrowser.CLIENT;
-import static io.github.thevoidblock.headbrowser.HeadBrowser.MOD_ID;
+import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
 import static java.lang.String.format;
 
 public class ErrorScreen extends BaseUIModelScreen<FlowLayout> {
@@ -43,8 +40,19 @@ public class ErrorScreen extends BaseUIModelScreen<FlowLayout> {
             );
         }
 
-        rootComponent.childById(ButtonComponent.class, "copy").onPress(button -> {
-            CLIENT.keyboard.setClipboard(format("%s%n%s", this.message, this.error));
-        });
+        rootComponent.childById(ButtonComponent.class, "copy").onPress(button ->
+                CLIENT.keyboard.setClipboard(format("%s%n%s", this.message, this.error))
+        );
+
+        rootComponent.childById(ButtonComponent.class, "issues").onPress(button ->
+                CLIENT.setScreen(new ConfirmLinkScreen(
+                        confirmed -> {
+                            if(confirmed) Util.getOperatingSystem().open(ISSUES_URL);
+                            CLIENT.setScreen(this);
+                        },
+                        Text.literal("confirm.headbrowser.open-issues"),
+                        ISSUES_URL,
+                        true
+        )));
     }
 }
