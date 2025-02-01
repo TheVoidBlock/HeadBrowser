@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -148,5 +149,12 @@ public class MinecraftHeadsAPI {
     public static class HEADS {
         public List<Head> heads = new ArrayList<>();
         public long downloadTime = System.currentTimeMillis();
+
+        public ItemStack getRandomHead() {
+            Random random = new Random();
+
+            if(!heads.isEmpty()) return heads.get(random.nextInt(0, heads.size())).toItem();
+            else return Items.PLAYER_HEAD.getDefaultStack();
+        }
     }
 }

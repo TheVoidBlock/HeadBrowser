@@ -293,11 +293,15 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                 int matchedKeywords = 0;
                 for(String keyword : keywords) if(head.name().toLowerCase().contains(keyword)) matchedKeywords++;
                 boolean tagMatches = false;
-                for(String tag : head.tags()) for(String keyword : keywords) if(tag.toLowerCase().contains(keyword)) {
+                for(String tag : head.tags()) if(tag.toLowerCase().contains(keywords[keywords.length - 1])) {
                     tagMatches = true;
                     break;
                 }
-                return matchedKeywords == keywords.length || (keywords.length == 1 && tagMatches);
+                return matchedKeywords == keywords.length
+                        || ((matchedKeywords == keywords.length - 1
+                        && !head.name().toLowerCase().contains(keywords[keywords.length - 1])
+                        && tagMatches
+                ));
             }).toList();
         }
 

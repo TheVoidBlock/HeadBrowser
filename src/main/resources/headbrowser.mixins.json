@@ -8,5 +8,9 @@
   },
   "mixins": [
     "GridLayoutAccessor"
+  ],
+  "client": [
+    "GameMenuScreenMixin",
+    "TitleScreenMixin"
   ]
 }

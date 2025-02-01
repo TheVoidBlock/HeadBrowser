@@ -10,5 +10,7 @@
   "category.headbrowser.screens": "Head Browser",
   "key.headbrowser.browse": "Open head browser",
 
-  "confirm.headbrowser.open-issues": "Open github issues"
+  "confirm.headbrowser.open-issues": "Open github issues",
+
+  "menu.headbrowser.wide-browse-button": "Browse Heads"
 }
