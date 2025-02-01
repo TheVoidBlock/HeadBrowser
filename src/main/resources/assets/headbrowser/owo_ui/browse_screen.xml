@@ -5,6 +5,14 @@
             <children>
                 <flow-layout direction="vertical">
                     <children>
+                        <label>
+                            <text>Head Browser</text>
+
+                            <margins>
+                                <bottom>5</bottom>
+                            </margins>
+                        </label>
+
                         <flow-layout direction="horizontal">
                             <children>
                                 <flow-layout direction="vertical">
@@ -141,7 +149,7 @@
                     <vertical-alignment>center</vertical-alignment>
 
                     <padding>
-                        <all>20</all>
+                        <all>10</all>
                     </padding>
 
                     <surface>
