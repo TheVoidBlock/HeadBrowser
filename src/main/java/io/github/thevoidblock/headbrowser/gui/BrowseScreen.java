@@ -216,7 +216,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
                     if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
                     if (CLIENT.player != null)
-                        CLIENT.player.sendMessage(Text.translatable("chat.headbrowser.skin-equip", head.name()));
+                        CLIENT.player.sendMessage(Text.translatable("chat.headbrowser.skin-equip", head.name()), false);
                     else CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-equip", head.name())));
                 }
 
