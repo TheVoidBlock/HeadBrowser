@@ -13,6 +13,7 @@ base {
 
 repositories {
     maven { url 'https://maven.wispforest.io/releases/' }
+    maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
 dependencies {
@@ -25,8 +26,11 @@ dependencies {
 
     modImplementation "io.wispforest:owo-lib:${project.owo_version}"
     include "io.wispforest:owo-sentinel:${project.owo_version}"
+    annotationProcessor modImplementation("io.wispforest:owo-lib:${project.owo_version}")
 
     implementation "com.google.code.gson:gson:${project.gson_version}"
+
+    modApi "com.terraformersmc:modmenu:11.0.3"
 }
 
 processResources {

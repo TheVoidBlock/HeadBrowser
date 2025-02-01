@@ -12,5 +12,15 @@
 
   "confirm.headbrowser.open-issues": "Open github issues",
 
-  "menu.headbrowser.wide-browse-button": "Browse Heads"
+  "menu.headbrowser.wide-browse-button": "Browse Heads",
+
+  "text.config.headbrowser.option.modEnabled": "Mod enabled",
+  "text.config.headbrowser.option.titleButtonVerticalOffset": "Title button offset (Vertical)",
+  "text.config.headbrowser.option.titleButtonHorizontalOffset": "Title button offset (Horizontal)",
+  "text.config.headbrowser.option.titleButton": "Title button",
+  "text.config.headbrowser.option.pauseButton": "Pause button",
+
+  "text.config.headbrowser.section.advanced": "Advanced (Do not change this unless you know what you are doing)",
+  "text.config.headbrowser.option.cacheExpirationTime": "Head cache expiration time (Seconds).",
+  "text.config.headbrowser.option.offsetMultiplier": "Title button offset multiplier"
 }

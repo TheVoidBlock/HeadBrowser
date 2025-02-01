@@ -13,6 +13,8 @@ import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.thevoidblock.headbrowser.HeadBrowserConfig;
+
 import java.awt.*;
 
 import static java.lang.String.format;
@@ -24,22 +26,23 @@ public class HeadBrowser implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     public static final String ISSUES_URL = "https://github.com/TheVoidBlock/HeadBrowser/issues/new";
+    public static final HeadBrowserConfig CONFIG = HeadBrowserConfig.createAndLoad();
 
     public static final int BROWSE_BUTTON_OFFSET = 4;
     public static final Dimension BROWSE_BUTTON_DIMENSIONS = new Dimension(20, 20);
 
-    public static final long CACHE_EXPIRATION_PERIOD = 86400000;
-
     @Override
     public void onInitializeClient() {
 
-        if(!MinecraftHeadsAPI.readHeads()) {
-            MinecraftHeadsAPI.downloadAndSaveHeads();
-        }
+        if(CONFIG.modEnabled()) {
+            if (!MinecraftHeadsAPI.readHeads()) {
+                MinecraftHeadsAPI.downloadAndSaveHeads();
+            }
 
-        if(currentTimeMillis() - MinecraftHeadsAPI.HEADS.downloadTime > CACHE_EXPIRATION_PERIOD) {
-            LOGGER.info("Heads cache expired. Downloading new heads");
-            MinecraftHeadsAPI.downloadAndSaveHeads();
+            if (currentTimeMillis() - MinecraftHeadsAPI.HEADS.downloadTime > CONFIG.cacheExpirationTime()*1000L) {
+                LOGGER.info("Heads cache expired. Downloading new heads");
+                MinecraftHeadsAPI.downloadAndSaveHeads();
+            }
         }
 
         KeyBindings.registerBindFunctions();
@@ -60,8 +63,8 @@ public class HeadBrowser implements ClientModInitializer {
 
     public static ButtonWidget createSquareBrowseButton(int anchorButtonX, int anchorButtonWidth, int y) {
         return new BrowseHeadsButton(
-                anchorButtonX + anchorButtonWidth + BROWSE_BUTTON_OFFSET,
-                y,
+                anchorButtonX + anchorButtonWidth + BROWSE_BUTTON_OFFSET + CONFIG.titleButtonHorizontalOffset()*CONFIG.offsetMultiplier(),
+                y + CONFIG.titleButtonVerticalOffset()*CONFIG.offsetMultiplier(),
                 BROWSE_BUTTON_DIMENSIONS.width,
                 Text.empty(),
                 button -> CLIENT.setScreen(new BrowseScreen()),

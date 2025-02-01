@@ -19,10 +19,11 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "initWidgetsNormal", at = @At("TAIL"))
     private void initWidgetsNormal(int y, int spacingY, CallbackInfo ci) {
-        int singlePlayerButtonWidth = 200;
-        int singlePlayerButtonX = this.width / 2 - singlePlayerButtonWidth / 2;
+        if(CONFIG.modEnabled() && CONFIG.titleButton()) {
+            int singlePlayerButtonWidth = 200;
+            int singlePlayerButtonX = this.width / 2 - singlePlayerButtonWidth / 2;
 
-        this.addDrawableChild(createSquareBrowseButton(singlePlayerButtonX, singlePlayerButtonWidth, y));
-
+            this.addDrawableChild(createSquareBrowseButton(singlePlayerButtonX, singlePlayerButtonWidth, y));
+        }
     }
 }
