@@ -5,4 +5,4 @@ Requires [Fabric API](https://modrinth.com/mod/fabric-api), [oωo](https://modri
 You can open the head browser menu by presseing the designated keybinding (default `KP 1`), or by pressing one of the menu buttons.
 
 ## Demo
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/YreYRk2MfnA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+https://github.com/user-attachments/assets/46ffca73-41f0-4283-8c65-4e7df3da5afd
