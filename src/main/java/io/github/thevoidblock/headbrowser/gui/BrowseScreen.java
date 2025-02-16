@@ -54,16 +54,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         FlowLayout categories = rootComponent.childById(FlowLayout.class, "categories");
 
         Filter filter = new Filter();
-        rebuildDynamic(
-                headsGrid,
-                filter,
-                nextPageButton,
-                previousPageButton,
-                leftPageButtons,
-                middlePageButtons,
-                rightPageButtons
-        );
-        buildCategories(
+        BuildData data = new BuildData(
                 categories,
                 filter,
                 headsGrid,
@@ -73,74 +64,38 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                 middlePageButtons,
                 rightPageButtons
         );
+        rebuildDynamic(data);
+        buildCategories(data);
 
         searchButton.onPress(button -> {
             filter.setSearchQuery(searchBox.getText());
-            rebuildDynamic(
-                    headsGrid,
-                    filter,
-                    nextPageButton,
-                    previousPageButton,
-                    leftPageButtons,
-                    middlePageButtons,
-                    rightPageButtons
-            );
+            rebuildDynamic(data);
         });
 
         searchBox.keyPress().subscribe((keyCode, scanCode, modifiers) -> {
             if(keyCode == GLFW.GLFW_KEY_ENTER) {
                 filter.setSearchQuery(searchBox.getText());
-                rebuildDynamic(
-                        headsGrid,
-                        filter,
-                        nextPageButton,
-                        previousPageButton,
-                        leftPageButtons,
-                        middlePageButtons,
-                        rightPageButtons
-                );
+                rebuildDynamic(data);
             }
             return true;
         });
 
         nextPageButton.onPress(button -> {
             filter.page++;
-            rebuildDynamic(
-                    headsGrid,
-                    filter,
-                    nextPageButton,
-                    previousPageButton,
-                    leftPageButtons,
-                    middlePageButtons,
-                    rightPageButtons
-            );
+            rebuildDynamic(data);
         });
 
         previousPageButton.onPress(button -> {
             filter.page--;
-            rebuildDynamic(headsGrid, filter, nextPageButton, previousPageButton, leftPageButtons, middlePageButtons, rightPageButtons);
+            rebuildDynamic(data);
         });
     }
 
-    private static void rebuildDynamic(
-            GridLayout headsGrid,
-            Filter filter,
-            ButtonComponent nextPageButton,
-            ButtonComponent previousPageButton,
-            FlowLayout leftPageButtons,
-            FlowLayout middlePageButtons,
-            FlowLayout rightPageButtons
-    ) {
-        rebuildHeadGrid(headsGrid, filter);
+    private static void rebuildDynamic(BuildData data) {
+        rebuildHeadGrid(data.headsGrid, data.filter);
         rebuildPages(
-                filter,
-                calculatePages(headsGrid, filter.filterAll(MinecraftHeadsAPI.HEADS.heads)),
-                nextPageButton,
-                previousPageButton,
-                leftPageButtons,
-                middlePageButtons,
-                rightPageButtons,
-                headsGrid
+                data,
+                calculatePages(data.headsGrid, data.filter.filterAll(MinecraftHeadsAPI.HEADS.heads))
         );
     }
 
@@ -324,92 +279,66 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     private static void rebuildPages(
-            Filter filter,
-            int pages,
-            ButtonComponent nextButton,
-            ButtonComponent previousButton,
-            FlowLayout left,
-            FlowLayout middle,
-            FlowLayout right,
-            GridLayout headsGrid
+            BuildData data,
+            int pages
     ) {
-        previousButton.active(filter.page != 1);
-        nextButton.active(!(filter.page >= pages));
+        data.previousPageButton.active(data.filter.page != 1);
+        data.nextPageButton.active(!(data.filter.page >= pages));
 
-        PageList pageButtons = new PageList(filter.page, pages);
-        left.clearChildren();
-        middle.clearChildren();
-        right.clearChildren();
-        for(int page : pageButtons.left) left.child(createPageButton(
-                filter,
-                page,
-                nextButton,
-                previousButton,
-                left,
-                middle,
-                right,
-                headsGrid
-        ));
-        for(int page : pageButtons.middle) left.child(createPageButton(
-                filter,
-                page,
-                nextButton,
-                previousButton,
-                left,
-                middle,
-                right,
-                headsGrid
-        ));
-        for(int page : pageButtons.right) left.child(createPageButton(
-                filter,
-                page,
-                nextButton,
-                previousButton,
-                left,
-                middle,
-                right,
-                headsGrid
-        ));
+        PageList pageButtons = new PageList(data.filter.page, pages);
+        data.leftPageButtons.clearChildren();
+        data.middlePageButtons.clearChildren();
+        data.rightPageButtons.clearChildren();
+        for(int page : pageButtons.left) data.leftPageButtons.child(createPageButton(page, data));
+        for(int page : pageButtons.middle) data.leftPageButtons.child(createPageButton(page, data));
+        for(int page : pageButtons.right) data.leftPageButtons.child(createPageButton(page, data));
     }
 
     private static ButtonComponent createPageButton(
-            Filter filter,
             int page,
-            ButtonComponent nextButton,
-            ButtonComponent previousButton,
-            FlowLayout left,
-            FlowLayout middle,
-            FlowLayout right,
-            GridLayout headsGrid
+            BuildData data
     ) {
         return Components.button(
                 Text.of(Integer.toString(page)),
                 button -> {
-                    filter.setPage(page);
-                    rebuildDynamic(headsGrid, filter, nextButton, previousButton, left, middle, right);
+                    data.filter.setPage(page);
+                    rebuildDynamic(data);
                 }
-        ).active(filter.page != page);
+        ).active(data.filter.page != page);
     }
 
-    private static void buildCategories(
-            FlowLayout categories,
-            Filter filter,
-            GridLayout headsGrid,
-            ButtonComponent nextPageButton,
-            ButtonComponent previousPageButton,
-            FlowLayout leftPageButtons,
-            FlowLayout middlePageButtons,
-            FlowLayout rightPageButtons
-    ) {
-        categories.clearChildren();
+    private static void buildCategories(BuildData data) {
+        data.categories.clearChildren();
         for(MinecraftHeadsAPI.CATEGORY category : MinecraftHeadsAPI.CATEGORY.values()) {
-            SmallCheckboxComponent checkbox = Components.smallCheckbox(Text.of(category.asString())).checked(filter.categories.getOrDefault(category, true));
+            SmallCheckboxComponent checkbox = Components.smallCheckbox(Text.of(category.asString())).checked(data.filter.categories.getOrDefault(category, true));
             checkbox.onChanged().subscribe(checked -> {
-                filter.categories.put(category, checked);
-                filter.page = 1;
-                rebuildDynamic(headsGrid, filter, nextPageButton, previousPageButton, leftPageButtons, middlePageButtons, rightPageButtons);
+                data.filter.categories.put(category, checked);
+                data.filter.page = 1;
+                rebuildDynamic(data);
             });
-            categories.child(checkbox);
+            data.categories.child(checkbox);
+        }
+    }
+
+    private static class BuildData {
+        FlowLayout categories;
+        Filter filter;
+        GridLayout headsGrid;
+        ButtonComponent nextPageButton;
+        ButtonComponent previousPageButton;
+        FlowLayout leftPageButtons;
+        FlowLayout middlePageButtons;
+        FlowLayout rightPageButtons;
+
+        public BuildData(FlowLayout categories, Filter filter, GridLayout headsGrid, ButtonComponent nextPageButton, ButtonComponent previousPageButton, FlowLayout leftPageButtons, FlowLayout middlePageButtons, FlowLayout rightPageButtons) {
+            this.categories = categories;
+            this.filter = filter;
+            this.headsGrid = headsGrid;
+            this.nextPageButton = nextPageButton;
+            this.previousPageButton = previousPageButton;
+            this.leftPageButtons = leftPageButtons;
+            this.middlePageButtons = middlePageButtons;
+            this.rightPageButtons = rightPageButtons;
         }
     }
 }
