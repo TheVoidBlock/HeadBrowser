@@ -14,7 +14,6 @@ import io.wispforest.owo.ui.container.GridLayout;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -73,10 +72,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         });
 
         searchBox.keyPress().subscribe((keyCode, scanCode, modifiers) -> {
-            if(keyCode == GLFW.GLFW_KEY_ENTER) {
-                filter.setSearchQuery(searchBox.getText());
-                rebuildDynamic(data);
-            }
+            filter.setSearchQuery(searchBox.getText());
+            rebuildDynamic(data);
             return true;
         });
 
