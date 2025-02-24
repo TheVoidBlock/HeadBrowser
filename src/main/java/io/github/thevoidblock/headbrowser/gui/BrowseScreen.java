@@ -7,6 +7,7 @@ import io.github.thevoidblock.headbrowser.MinecraftHeadsAPI;
 import io.github.thevoidblock.headbrowser.SkinChanger;
 import io.github.thevoidblock.headbrowser.Styler;
 import io.github.thevoidblock.headbrowser.mixin.GridLayoutAccessor;
+import io.github.thevoidblock.headbrowser.util.ClientTickScheduler;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.*;
 import io.wispforest.owo.ui.container.FlowLayout;
@@ -14,6 +15,7 @@ import io.wispforest.owo.ui.container.GridLayout;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.lwjgl.glfw.GLFW;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -72,9 +74,13 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         });
 
         searchBox.keyPress().subscribe((keyCode, scanCode, modifiers) -> {
-            filter.setSearchQuery(searchBox.getText());
-            rebuildDynamic(data);
-            return true;
+            ClientTickScheduler.schedule(client -> {
+                if(CONFIG.autoQuery() || keyCode == GLFW.GLFW_KEY_ENTER) {
+                    filter.setSearchQuery(searchBox.getText());
+                    rebuildDynamic(data);
+                }
+            }, 0);
+            return false;
         });
 
         nextPageButton.onPress(button -> {

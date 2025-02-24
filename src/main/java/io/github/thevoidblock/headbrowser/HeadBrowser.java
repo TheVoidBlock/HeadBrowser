@@ -4,6 +4,7 @@ import io.github.thevoidblock.headbrowser.gui.AlertScreen;
 import io.github.thevoidblock.headbrowser.gui.BrowseScreen;
 import io.github.thevoidblock.headbrowser.gui.ErrorScreen;
 import io.github.thevoidblock.headbrowser.gui.widget.BrowseHeadsButton;
+import io.github.thevoidblock.headbrowser.util.ClientTickScheduler;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -46,6 +47,7 @@ public class HeadBrowser implements ClientModInitializer {
         }
 
         KeyBindings.registerBindFunctions();
+        ClientTickScheduler.register();
     }
 
     public static void presentError(String message, String error) {
