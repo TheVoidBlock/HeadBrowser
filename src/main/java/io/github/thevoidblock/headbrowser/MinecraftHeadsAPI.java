@@ -7,6 +7,8 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.StringIdentifiable;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -115,9 +117,10 @@ public class MinecraftHeadsAPI {
 
         public ItemStack toItem() {
                 ItemStack head = Items.PLAYER_HEAD.getDefaultStack();
-                GameProfile profile = new GameProfile(this.uuid, this.name.replaceAll(" ", ""));
+                GameProfile profile = new GameProfile(this.uuid, "TheVoidBlock");
                 profile.getProperties().put("textures", new Property("textures", this.value));
                 head.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
+                head.set(DataComponentTypes.CUSTOM_NAME, Text.literal(this.name()).setStyle(Style.EMPTY.withItalic(false)));
                 return head;
             }
         }
