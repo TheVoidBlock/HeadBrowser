@@ -19,6 +19,7 @@
   "text.config.headbrowser.option.titleButtonHorizontalOffset": "Title button offset (Horizontal)",
   "text.config.headbrowser.option.titleButton": "Title button",
   "text.config.headbrowser.option.pauseButton": "Pause button",
+  "text.config.headbrowser.option.autoQuery": "Automatic Query",
 
   "text.config.headbrowser.section.advanced": "Advanced (Do not change this unless you know what you are doing)",
   "text.config.headbrowser.option.cacheExpirationTime": "Head cache expiration time (Seconds).",
