@@ -7,7 +7,7 @@
                     <children>
                         <label>
                             <color>red</color>
-                            <text>HeadBrowser encountered an issue. Please report this bug!</text>
+                            <text translate="true">screen.headbrowser.error.title</text>
                             <margins>
                                 <all>5</all>
                             </margins>
@@ -38,7 +38,7 @@
                         <flow-layout direction="horizontal">
                             <children>
                                 <button id="copy">
-                                    <text>Copy to clipboard</text>
+                                    <text translate="true">screen.headbrowser.error.copy</text>
 
                                     <margins>
                                         <right>5</right>
@@ -46,7 +46,7 @@
                                 </button>
 
                                 <button id="issues">
-                                    <text>Create bug report (GitHub Issues)</text>
+                                    <text translate="true">screen.headbrowser.error.report</text>
                                 </button>
                             </children>
                         </flow-layout>

@@ -23,5 +23,22 @@
 
   "text.config.headbrowser.section.advanced": "Advanced (Do not change this unless you know what you are doing)",
   "text.config.headbrowser.option.cacheExpirationTime": "Head cache expiration time (Seconds).",
-  "text.config.headbrowser.option.offsetMultiplier": "Title button offset multiplier"
+  "text.config.headbrowser.option.offsetMultiplier": "Title button offset multiplier",
+
+  "screen.headbrowser.browse.category.alphabet": "Alphabet",
+  "screen.headbrowser.browse.category.animals": "Animals",
+  "screen.headbrowser.browse.category.blocks": "Blocks",
+  "screen.headbrowser.browse.category.decoration": "Decoration",
+  "screen.headbrowser.browse.category.food-drinks": "Food & Drinks",
+  "screen.headbrowser.browse.category.humans": "Humans",
+  "screen.headbrowser.browse.category.humanoid": "Humanoid",
+  "screen.headbrowser.browse.category.miscellaneous": "Miscellaneous",
+  "screen.headbrowser.browse.category.monsters": "Monsters",
+  "screen.headbrowser.browse.category.plants": "Plants",
+
+  "screen.headbrowser.alert.confirm": "Ok",
+
+  "screen.headbrowser.error.title": "HeadBrowser encountered an issue. Please report this bug!",
+  "screen.headbrowser.error.copy": "Copy to clipboard",
+  "screen.headbrowser.error.report": "Create bug report (GitHub Issues)"
 }

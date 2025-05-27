@@ -6,8 +6,7 @@
                 <flow-layout direction="vertical">
                     <children>
                         <label>
-                            <text>Head Browser</text>
-
+                            <text translate="true">category.headbrowser.screens</text>
                             <margins>
                                 <bottom>5</bottom>
                             </margins>

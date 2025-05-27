@@ -24,6 +24,7 @@ import java.util.*;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
 import static io.github.thevoidblock.headbrowser.HeadBrowser.CLIENT;
+import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
@@ -313,7 +314,9 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     private static void buildCategories(BuildData data) {
         data.categories.clearChildren();
         for(MinecraftHeadsAPI.CATEGORY category : MinecraftHeadsAPI.CATEGORY.values()) {
-            SmallCheckboxComponent checkbox = Components.smallCheckbox(Text.of(category.asString())).checked(data.filter.categories.getOrDefault(category, true));
+            SmallCheckboxComponent checkbox = Components.smallCheckbox(
+                    Text.translatable(format("screen.%s.browse.category.%s", MOD_ID, category.asString().toLowerCase())))
+                    .checked(data.filter.categories.getOrDefault(category, true));
             checkbox.onChanged().subscribe(checked -> {
                 data.filter.categories.put(category, checked);
                 data.filter.page = 1;

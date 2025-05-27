@@ -11,7 +11,7 @@
                             </margins>
                         </label>
                         <button id="ok">
-                            <text>Ok</text>
+                            <text translate="true">screen.headbrowser.alert.confirm</text>
 
                             <sizing>
                                 <horizontal method="fixed">40</horizontal>
