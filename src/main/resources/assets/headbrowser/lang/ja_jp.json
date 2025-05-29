@@ -1,0 +1,44 @@
+{
+  "chat.headbrowser.skin-equip": "%s をスキンとして装備！適用するには再ログインしてください。",
+  "chat.headbrowser.skin-fail": "スキン変更に失敗しました。あなたが非正規アカウントであるか、インターネットに接続されていない可能性があります。",
+
+  "tooltip.headbrowser.head-options": "左クリック - ヘッドを取得 (クリエイティブモードのみ)\n右クリック - ヘッドをスキンとして装備",
+  "tooltip.headbrowser.head-category-tags": "#%s\ntags: %s",
+
+  "alert.headbrowser.head-category-tags": "ワールドに存在しないため、アイテムを取得できません。",
+
+  "category.headbrowser.screens": "ヘッドブラウザー",
+  "key.headbrowser.browse": "ヘッドブラウザーを開く",
+
+  "confirm.headbrowser.open-issues": "GitHubの問題を開く",
+
+  "menu.headbrowser.wide-browse-button": "ヘッドを閲覧",
+
+  "text.config.headbrowser.option.modEnabled": "MOD 有効",
+  "text.config.headbrowser.option.titleButtonVerticalOffset": "タイトルボタンの位置補正 (垂直)",
+  "text.config.headbrowser.option.titleButtonHorizontalOffset": "タイトルボタンの位置補正 (水平)",
+  "text.config.headbrowser.option.titleButton": "タイトルボタン",
+  "text.config.headbrowser.option.pauseButton": "一時停止ボタン",
+  "text.config.headbrowser.option.autoQuery": "自動照会",
+
+  "text.config.headbrowser.section.advanced": "高度な設定 (これを変更する場合は慎重に)",
+  "text.config.headbrowser.option.cacheExpirationTime": "ヘッドキャッシュの有効期限 (秒)",
+  "text.config.headbrowser.option.offsetMultiplier": "タイトルボタンの位置補正倍率",
+
+  "screen.headbrowser.browse.category.alphabet": "アルファベット",
+  "screen.headbrowser.browse.category.animals": "動物",
+  "screen.headbrowser.browse.category.blocks": "ブロック",
+  "screen.headbrowser.browse.category.decoration": "装飾",
+  "screen.headbrowser.browse.category.food-drinks": "食べ物と飲み物",
+  "screen.headbrowser.browse.category.humans": "人間",
+  "screen.headbrowser.browse.category.humanoid": "ヒューマノイド",
+  "screen.headbrowser.browse.category.miscellaneous": "その他",
+  "screen.headbrowser.browse.category.monsters": "モンスター",
+  "screen.headbrowser.browse.category.plants": "植物",
+
+  "screen.headbrowser.alert.confirm": "OK",
+
+  "screen.headbrowser.error.title": "HeadBrowserで問題が発生しました。バグを報告してください！",
+  "screen.headbrowser.error.copy": "クリップボードにコピー",
+  "screen.headbrowser.error.report": "バグレポートを作成（GitHubのIssue）"
+}
