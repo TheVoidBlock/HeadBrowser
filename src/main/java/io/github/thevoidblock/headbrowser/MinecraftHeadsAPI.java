@@ -16,12 +16,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
@@ -29,9 +27,10 @@ import static java.lang.String.format;
 
 public class MinecraftHeadsAPI {
 
+    private static final String APP_UUID = "ecdf3625-9a93-4481-b8be-a32f25ca1ea0";
     public static final File HEADS_FILE = new File(CLIENT.runDirectory, "headbrowser_cache.json");
     private static final Gson GSON = new GsonBuilder().create();
-    public static final String MINECRAFT_HEADS_API = "https://minecraft-heads.com/scripts/api.php";
+    public static final String MINECRAFT_HEADS_API = "https://minecraft-heads.com/api/heads/custom-heads";
 
     public static HEADS HEADS = new HEADS();
 
@@ -43,20 +42,19 @@ public class MinecraftHeadsAPI {
 
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             for(CATEGORY category : CATEGORY.values()) {
-                HttpGet request = new HttpGet(format("%s?tags=true&cat=%s", MINECRAFT_HEADS_API, category.asString().toLowerCase()));
+                HttpGet request = new HttpGet(format("%s?app_uuid=%s&category_id=%s", MINECRAFT_HEADS_API, APP_UUID, category.ordinal() + 1));
                 String response = client.execute(request, new BasicResponseHandler());
-                List<JsonElement> categoryHeadsJson = GSON.fromJson(response, JsonArray.class).asList();
+                List<JsonElement> categoryHeadsJson = GSON.fromJson(response, JsonObject.class).get("data").getAsJsonArray().asList();
 
                 List<Head> categoryHeads = new ArrayList<>();
                 for(JsonElement headUnspecified : categoryHeadsJson) {
                     JsonObject head = headUnspecified.getAsJsonObject();
                     categoryHeads.add(
                             new Head(
-                                    head.get("name").getAsString(),
-                                    head.get("value").getAsString(),
-                                    head.get("tags").getAsString().split(","),
+                                    head.get("n").getAsString(),
+                                    encodeTextureToValue(head.get("u").getAsString()),
                                     category,
-                                    UUID.fromString(head.get("uuid").getAsString())
+                                    UUID.fromString("967e3d4f-c3d3-48b9-9989-79387adcbfec")
                             )
                     );
                 }
@@ -79,6 +77,11 @@ public class MinecraftHeadsAPI {
         HEADS.heads = heads;
 
         return true;
+    }
+
+    private static String encodeTextureToValue(String texture) {
+        String json = format("{\"textures\":{\"SKIN\":{\"url\":\"http://textures.minecraft.net/texture/%s\"}}}", texture);
+        return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
     }
 
     private static void saveHeads() {
@@ -113,7 +116,7 @@ public class MinecraftHeadsAPI {
         if(downloadDatabase()) saveHeads();
     }
 
-    public record Head(String name, String value, String[] tags, CATEGORY category, UUID uuid) {
+    public record Head(String name, String value, CATEGORY category, UUID uuid) {
 
         public ItemStack toItem() {
                 ItemStack head = Items.PLAYER_HEAD.getDefaultStack();

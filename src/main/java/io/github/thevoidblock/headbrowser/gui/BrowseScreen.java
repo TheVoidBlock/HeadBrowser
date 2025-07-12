@@ -193,7 +193,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     private static void createHeadComponentTooltip(ItemComponent headComponent, MinecraftHeadsAPI.Head head) {
-        headComponent.tooltip(Styler.StyleHeadTooltip(head.name(), head.category(), head.tags()));
+        headComponent.tooltip(Styler.StyleHeadTooltip(head.name(), head.category()));
     }
 
     private static class PageList {
@@ -251,15 +251,9 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                 String[] keywords = searchQuery.toLowerCase().split(" ");
                 int matchedKeywords = 0;
                 for(String keyword : keywords) if(head.name().toLowerCase().contains(keyword)) matchedKeywords++;
-                boolean tagMatches = false;
-                for(String tag : head.tags()) if(tag.toLowerCase().contains(keywords[keywords.length - 1])) {
-                    tagMatches = true;
-                    break;
-                }
                 return matchedKeywords == keywords.length
                         || ((matchedKeywords == keywords.length - 1
                         && !head.name().toLowerCase().contains(keywords[keywords.length - 1])
-                        && tagMatches
                 ));
             }).toList();
         }
