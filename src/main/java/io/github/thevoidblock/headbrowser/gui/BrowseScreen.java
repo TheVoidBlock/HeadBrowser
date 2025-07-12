@@ -251,10 +251,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                 String[] keywords = searchQuery.toLowerCase().split(" ");
                 int matchedKeywords = 0;
                 for(String keyword : keywords) if(head.name().toLowerCase().contains(keyword)) matchedKeywords++;
-                return matchedKeywords == keywords.length
-                        || ((matchedKeywords == keywords.length - 1
-                        && !head.name().toLowerCase().contains(keywords[keywords.length - 1])
-                ));
+                return matchedKeywords == keywords.length;
             }).toList();
         }
 
