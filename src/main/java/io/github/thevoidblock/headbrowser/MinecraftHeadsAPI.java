@@ -125,8 +125,8 @@ public class MinecraftHeadsAPI {
                 head.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
                 head.set(DataComponentTypes.CUSTOM_NAME, Text.literal(this.name()).setStyle(Style.EMPTY.withItalic(false)));
                 return head;
-            }
         }
+    }
 
     public enum CATEGORY implements StringIdentifiable {
         ALPHABET("Alphabet"),
