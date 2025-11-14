@@ -9,19 +9,22 @@ import net.minecraft.util.Identifier;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.MOD_ID;
 
-public class AlertScreen extends BaseUIModelScreen<FlowLayout> {
-    public static final String SCREEN_ID = "alert_screen";
+public class ConfirmScreen extends BaseUIModelScreen<FlowLayout> {
+    public static final String SCREEN_ID = "confirm_screen";
 
     private final Text message;
+    private final Runnable onConfirm;
 
-    public AlertScreen(Text message) {
-        super(FlowLayout.class, DataSource.asset(Identifier.of(MOD_ID, SCREEN_ID)));
+    public ConfirmScreen(Text message, Runnable onConfirm) {
+        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(Identifier.of(MOD_ID, SCREEN_ID)));
         this.message = message;
+        this.onConfirm = onConfirm;
     }
 
     @Override
     protected void build(FlowLayout rootComponent) {
         rootComponent.childById(LabelComponent.class, "message").text(message);
-        rootComponent.childById(ButtonComponent.class, "ok").onPress(button -> this.close());
+        rootComponent.childById(ButtonComponent.class, "cancel").onPress(button -> this.close());
+        rootComponent.childById(ButtonComponent.class, "confirm").onPress(button -> onConfirm.run());
     }
 }

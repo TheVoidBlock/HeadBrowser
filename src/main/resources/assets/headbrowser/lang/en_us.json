@@ -10,6 +10,7 @@
   "key.headbrowser.browse": "Open head browser",
 
   "confirm.headbrowser.open-issues": "Open github issues",
+  "confirm.headbrowser.equip-skin": "Equip %s as a skin?",
 
   "menu.headbrowser.wide-browse-button": "Browse Heads",
 
@@ -40,5 +41,8 @@
 
   "screen.headbrowser.error.title": "HeadBrowser encountered an issue. Please report this bug!",
   "screen.headbrowser.error.copy": "Copy to clipboard",
-  "screen.headbrowser.error.report": "Create bug report (GitHub Issues)"
+  "screen.headbrowser.error.report": "Create bug report (GitHub Issues)",
+
+  "screen.headbrowser.confirm.confirm": "Confirm",
+  "screen.headbrowser.confirm.cancel": "Cancel"
 }

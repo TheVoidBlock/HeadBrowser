@@ -142,38 +142,42 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         ItemStack headItem = head.toItem();
         ItemComponent headComponent = Components.item(headItem);
         headComponent.mouseDown().subscribe((mouseX, mouseY, button) -> {
-            switch (button) {
-                case 1 -> {
-                    String skinValue = head.value();
-                    byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);
-                    String skinValueDecoded = new String(skinValueDecodedBytes, UTF_8);
-                    String skinURLString = GSON.fromJson(skinValueDecoded, JsonObject.class)
-                            .get("textures").getAsJsonObject()
-                            .get("SKIN").getAsJsonObject()
-                            .get("url").getAsJsonPrimitive().getAsString();
+            CLIENT.setScreen(new ConfirmScreen(Text.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
+                switch (button) {
+                    case 1 -> {
+                        String skinValue = head.value();
+                        byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);
+                        String skinValueDecoded = new String(skinValueDecodedBytes, UTF_8);
+                        String skinURLString = GSON.fromJson(skinValueDecoded, JsonObject.class)
+                                .get("textures").getAsJsonObject()
+                                .get("SKIN").getAsJsonObject()
+                                .get("url").getAsJsonPrimitive().getAsString();
 
-                    URL skinURL;
-                    try {
-                        skinURL = URI.create(skinURLString).toURL();
-                    } catch (MalformedURLException e) {
-                        String errorMessage = "Attempted to equip skin, but the url was malformed";
-                        presentError(errorMessage, e.toString());
-                        throw new RuntimeException(errorMessage, e);
+                        URL skinURL;
+                        try {
+                            skinURL = URI.create(skinURLString).toURL();
+                        } catch (MalformedURLException e) {
+                            String errorMessage = "Attempted to equip skin, but the url was malformed";
+                            presentError(errorMessage, e.toString());
+                            throw new RuntimeException(errorMessage, e);
+                        }
+
+                        SkinChanger.changeSkin(SkinChanger.SKIN_VARIANT.SLIM, skinURL);
+
+                        if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
+                        if (CLIENT.player != null)
+                            CLIENT.player.sendMessage(Text.translatable("chat.headbrowser.skin-equip", head.name()), false);
+                        else
+                            CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-equip", head.name())));
                     }
 
-                    SkinChanger.changeSkin(SkinChanger.SKIN_VARIANT.SLIM, skinURL);
-
-                    if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
-                    if (CLIENT.player != null)
-                        CLIENT.player.sendMessage(Text.translatable("chat.headbrowser.skin-equip", head.name()), false);
-                    else CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-equip", head.name())));
+                    case 0 -> {
+                        if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
+                        getItem(headItem);
+                    }
                 }
+            }));
 
-                case 0 -> {
-                    if(CLIENT.currentScreen != null) CLIENT.currentScreen.close();
-                    getItem(headItem);
-                }
-            }
             return true;
         });
 
