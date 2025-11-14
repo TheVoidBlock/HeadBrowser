@@ -5,11 +5,13 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import io.github.thevoidblock.headbrowser.util.ThrowingConsumer;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.ProfileComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Language;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
@@ -154,12 +156,13 @@ public class MinecraftHeadsAPI {
 
     public record Head(String name, String value, int category, UUID uuid) {
         public ItemStack toItem() {
-                ItemStack head = Items.PLAYER_HEAD.getDefaultStack();
-                GameProfile profile = new GameProfile(this.uuid, "TheVoidBlock");
-                profile.getProperties().put("textures", new Property("textures", this.value));
-                head.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
-                head.set(DataComponentTypes.CUSTOM_NAME, Text.literal(this.name()).setStyle(Style.EMPTY.withItalic(false)));
-                return head;
+            ItemStack head = Items.PLAYER_HEAD.getDefaultStack();
+            GameProfile profile = new GameProfile(this.uuid, "TheVoidBlock");
+            profile.getProperties().put("textures", new Property("textures", this.value));
+            head.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
+            head.set(DataComponentTypes.CUSTOM_NAME, Text.literal(this.name()).setStyle(Style.EMPTY.withItalic(false)));
+            head.set(DataComponentTypes.LORE, new LoreComponent(Collections.singletonList(Text.literal("Head Browser mod by TheVoidBlock").formatted(Formatting.DARK_GRAY))));
+            return head;
         }
     }
 
