@@ -7,7 +7,7 @@ import io.github.thevoidblock.headbrowser.MinecraftHeadsAPI;
 import io.github.thevoidblock.headbrowser.SkinChanger;
 import io.github.thevoidblock.headbrowser.Styler;
 import io.github.thevoidblock.headbrowser.mixin.GridLayoutAccessor;
-import io.github.thevoidblock.headbrowser.util.ClientTickScheduler;
+import io.github.thevoidblock.headbrowser.ClientTickScheduler;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.*;
 import io.wispforest.owo.ui.container.FlowLayout;
@@ -24,15 +24,12 @@ import java.util.*;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
 import static io.github.thevoidblock.headbrowser.HeadBrowser.CLIENT;
-import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static io.github.thevoidblock.headbrowser.MinecraftHeadsAPI.HEADS;
 
 public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
-
     public static final String SCREEN_ID = "browse_screen";
-
     private final static Gson GSON = new GsonBuilder().create();
-
     private final static int PAGES_BEFORE_TRUNCATION = 3;
 
     public BrowseScreen() {
@@ -41,7 +38,6 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout rootComponent) {
-
         GridLayout headsGrid = rootComponent.childById(GridLayout.class, "heads");
         TextBoxComponent searchBox = rootComponent.childById(TextBoxComponent.class, "search-box");
         ButtonComponent searchButton = rootComponent.childById(ButtonComponent.class, "search-button");
@@ -99,7 +95,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         rebuildHeadGrid(data.headsGrid, data.filter);
         rebuildPages(
                 data,
-                calculatePages(data.headsGrid, data.filter.filterAll(MinecraftHeadsAPI.HEADS.heads))
+                calculatePages(data.headsGrid, data.filter.filterAll(MinecraftHeadsAPI.HEADS.data))
         );
     }
 
@@ -107,7 +103,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         int rows = ((GridLayoutAccessor)headsGrid).getRows();
         int columns = ((GridLayoutAccessor)headsGrid).getColumns();
 
-        return (int)Math.ceil((double) filteredHeads.size() / (rows*columns));
+        return (int)Math.ceil((double) filteredHeads.size() / (rows * columns));
     }
 
     private static void rebuildHeadGrid(GridLayout headsGrid, Filter filter) {
@@ -130,20 +126,16 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         int rows = ((GridLayoutAccessor)headsGrid).getRows();
         int columns = ((GridLayoutAccessor)headsGrid).getColumns();
 
-        List<MinecraftHeadsAPI.Head> heads = new ArrayList<>(MinecraftHeadsAPI.HEADS.heads);
+        List<MinecraftHeadsAPI.Head> heads = new ArrayList<>(MinecraftHeadsAPI.HEADS.data);
         heads = filter.filterAll(heads);
         heads = filter.filterPage(heads, headsGrid);
 
-        {
-            int i = 0;
-            for (int x = 0; x < rows; x++) {
-                for (int y = 0; y < columns; y++) {
-                    if(heads.size() > i) {
-                        ItemComponent head = getHeadComponent(heads.get(i));
-                        headsGrid.child(head, x, y);
-                    } else return;
-                    i++;
-                }
+        for (int x = 0, i = 0; x < rows; x++) {
+            for (int y = 0; y < columns; y++, ++i) {
+                if(heads.size() > i) {
+                    ItemComponent head = getHeadComponent(heads.get(i));
+                    headsGrid.child(head, x, y);
+                } else return;
             }
         }
     }
@@ -223,7 +215,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
     private static class Filter {
 
-        public Map<MinecraftHeadsAPI.CATEGORY, Boolean> categories = new HashMap<>();
+        public Map<Integer, Boolean> categories = new HashMap<>();
 
         public int page = 1;
 
@@ -304,15 +296,16 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
     private static void buildCategories(BuildData data) {
         data.categories.clearChildren();
-        for(MinecraftHeadsAPI.CATEGORY category : MinecraftHeadsAPI.CATEGORY.values()) {
-            SmallCheckboxComponent checkbox = Components.smallCheckbox(
-                    Text.translatable(format("screen.%s.browse.category.%s", MOD_ID, category.asString().toLowerCase())))
-                    .checked(data.filter.categories.getOrDefault(category, true));
+        for(Map.Entry<Integer, String> category : HEADS.categories.entrySet()) {
+            SmallCheckboxComponent checkbox = Components.smallCheckbox(HEADS.getCategoryText(category.getKey()))
+                    .checked(data.filter.categories.getOrDefault(category.getKey(), true));
+
             checkbox.onChanged().subscribe(checked -> {
-                data.filter.categories.put(category, checked);
+                data.filter.categories.put(category.getKey(), checked);
                 data.filter.page = 1;
                 rebuildDynamic(data);
             });
+
             data.categories.child(checkbox);
         }
     }

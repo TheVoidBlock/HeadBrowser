@@ -46,7 +46,7 @@
 
                                         </flow-layout>
 
-                                        <grid-layout rows="6" columns="7" id="heads">
+                                        <grid-layout rows="7" columns="7" id="heads">
                                             <children />
 
                                             <padding>
@@ -66,7 +66,7 @@
                                     <children />
 
                                     <sizing>
-                                        <vertical method="fixed">143</vertical>
+                                        <vertical method="fixed">159</vertical>
                                     </sizing>
 
                                     <margins>

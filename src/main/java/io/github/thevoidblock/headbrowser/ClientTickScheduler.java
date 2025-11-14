@@ -1,4 +1,4 @@
-package io.github.thevoidblock.headbrowser.util;
+package io.github.thevoidblock.headbrowser;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 

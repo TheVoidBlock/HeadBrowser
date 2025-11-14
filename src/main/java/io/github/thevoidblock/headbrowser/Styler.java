@@ -5,8 +5,10 @@ import net.minecraft.text.Text;
 import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
 
+import static io.github.thevoidblock.headbrowser.MinecraftHeadsAPI.HEADS;
+
 public class Styler {
-    public static Text StyleHeadTooltip(String name, MinecraftHeadsAPI.CATEGORY category) {
+    public static Text StyleHeadTooltip(String name, int categoryId) {
         MutableText nameText = (MutableText) Text.of(name);
         nameText.setStyle(Style.EMPTY.withColor(Formatting.YELLOW).withBold(true));
 
@@ -14,7 +16,7 @@ public class Styler {
         infoText.setStyle(Style.EMPTY.withBold(false).withColor(Formatting.WHITE));
 
 
-        MutableText categoryInfoText = Text.translatable("tooltip.headbrowser.head-category", category.asString());
+        MutableText categoryInfoText = (MutableText) HEADS.getCategoryText(categoryId);
         categoryInfoText.setStyle(Style.EMPTY.withBold(false).withColor(Formatting.DARK_GRAY));
 
         MutableText tooltipText = Text.empty();

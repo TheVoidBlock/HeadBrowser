@@ -4,7 +4,7 @@ import io.github.thevoidblock.headbrowser.gui.AlertScreen;
 import io.github.thevoidblock.headbrowser.gui.BrowseScreen;
 import io.github.thevoidblock.headbrowser.gui.ErrorScreen;
 import io.github.thevoidblock.headbrowser.gui.widget.BrowseHeadsButton;
-import io.github.thevoidblock.headbrowser.util.ClientTickScheduler;
+import io.github.thevoidblock.headbrowser.HeadBrowserConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -13,8 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import io.github.thevoidblock.headbrowser.HeadBrowserConfig;
 
 import java.awt.*;
 
@@ -34,7 +32,6 @@ public class HeadBrowser implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-
         if(CONFIG.modEnabled()) {
             if (!MinecraftHeadsAPI.readHeads()) {
                 MinecraftHeadsAPI.downloadAndSaveHeads();
