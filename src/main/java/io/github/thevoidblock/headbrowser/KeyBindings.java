@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.CLIENT;
@@ -16,7 +17,7 @@ public class KeyBindings {
             new KeyBinding(
                     format("key.%s.%s", MOD_ID, "browse"),
                     GLFW.GLFW_KEY_KP_1,
-                    format("category.%s.%s", MOD_ID, "screens")
+                    new KeyBinding.Category(Identifier.of(MOD_ID, "main"))
             )
     );
 
@@ -27,7 +28,6 @@ public class KeyBindings {
     }
 
     public static boolean isKeyPressed(int keyCode) {
-        long handle = CLIENT.getWindow().getHandle();
-        return InputUtil.isKeyPressed(handle, keyCode);
+        return InputUtil.isKeyPressed(CLIENT.getWindow(), keyCode);
     }
 }

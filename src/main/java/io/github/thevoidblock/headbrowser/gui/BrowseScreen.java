@@ -68,9 +68,9 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             rebuildDynamic(data);
         });
 
-        searchBox.keyPress().subscribe((keyCode, scanCode, modifiers) -> {
+        searchBox.keyPress().subscribe(keyCode -> {
             ClientTickScheduler.schedule(client -> {
-                if(CONFIG.autoQuery() || keyCode == GLFW.GLFW_KEY_ENTER) {
+                if(CONFIG.autoQuery() || keyCode.key() == GLFW.GLFW_KEY_ENTER) {
                     filter.setSearchQuery(searchBox.getText());
                     rebuildDynamic(data);
                 }
@@ -141,8 +141,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     private static ItemComponent getHeadComponent(MinecraftHeadsAPI.Head head) {
         ItemStack headItem = head.toItem();
         ItemComponent headComponent = Components.item(headItem);
-        headComponent.mouseDown().subscribe((mouseX, mouseY, button) -> {
-            switch (button) {
+        headComponent.mouseDown().subscribe((click, doubled) -> {
+            switch (click.button()) {
                 case 1 -> CLIENT.setScreen(new ConfirmScreen(Text.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
                     String skinValue = head.value();
                     byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);

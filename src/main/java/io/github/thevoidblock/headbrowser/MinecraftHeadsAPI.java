@@ -1,8 +1,11 @@
 package io.github.thevoidblock.headbrowser;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import io.github.thevoidblock.headbrowser.util.ThrowingConsumer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
@@ -157,9 +160,14 @@ public class MinecraftHeadsAPI {
     public record Head(String name, String value, int category, UUID uuid) {
         public ItemStack toItem() {
             ItemStack head = Items.PLAYER_HEAD.getDefaultStack();
-            GameProfile profile = new GameProfile(this.uuid, "TheVoidBlock");
-            profile.getProperties().put("textures", new Property("textures", this.value));
-            head.set(DataComponentTypes.PROFILE, new ProfileComponent(profile));
+
+            Property property = new Property("textures", this.value);
+            Multimap<String, Property> multimap = HashMultimap.create();
+            multimap.put("textures", property);
+            PropertyMap propertyMap = new PropertyMap(multimap);
+            GameProfile profile = new GameProfile(this.uuid, "TheVoidBlock", propertyMap);
+
+            head.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(profile));
             head.set(DataComponentTypes.CUSTOM_NAME, Text.literal(this.name()).setStyle(Style.EMPTY.withItalic(false)));
             head.set(DataComponentTypes.LORE, new LoreComponent(Collections.singletonList(Text.literal("Head Browser mod by TheVoidBlock").formatted(Formatting.DARK_GRAY))));
             return head;
