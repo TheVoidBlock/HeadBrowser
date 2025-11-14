@@ -3,11 +3,8 @@ package io.github.thevoidblock.headbrowser.gui;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import io.github.thevoidblock.headbrowser.MinecraftHeadsAPI;
-import io.github.thevoidblock.headbrowser.SkinChanger;
-import io.github.thevoidblock.headbrowser.Styler;
+import io.github.thevoidblock.headbrowser.*;
 import io.github.thevoidblock.headbrowser.mixin.GridLayoutAccessor;
-import io.github.thevoidblock.headbrowser.ClientTickScheduler;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.*;
 import io.wispforest.owo.ui.container.FlowLayout;
@@ -62,6 +59,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                 middlePageButtons,
                 rightPageButtons
         );
+
         rebuildDynamic(data);
         buildCategories(data);
 
@@ -295,15 +293,22 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     private static void buildCategories(BuildData data) {
+        Map<Integer, Boolean> categories = data.filter.categories;
         data.categories.clearChildren();
         for(Map.Entry<Integer, String> category : HEADS.categories.entrySet()) {
             SmallCheckboxComponent checkbox = Components.smallCheckbox(HEADS.getCategoryText(category.getKey()))
-                    .checked(data.filter.categories.getOrDefault(category.getKey(), true));
+                    .checked(categories.getOrDefault(category.getKey(), true));
 
             checkbox.onChanged().subscribe(checked -> {
-                data.filter.categories.put(category.getKey(), checked);
+                if(KeyBindings.isKeyPressed(GLFW.GLFW_KEY_LEFT_ALT)) {
+                    HEADS.categories.forEach((id, name) -> categories.put(id, !categories.getOrDefault(id, true)));
+                    categories.put(category.getKey(), true);
+                } else {
+                    categories.put(category.getKey(), checked);
+                }
                 data.filter.page = 1;
                 rebuildDynamic(data);
+                buildCategories(data);
             });
 
             data.categories.child(checkbox);
