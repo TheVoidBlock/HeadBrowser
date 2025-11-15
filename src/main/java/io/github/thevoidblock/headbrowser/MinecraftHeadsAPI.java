@@ -31,7 +31,6 @@ import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
 import static java.lang.String.format;
 
 public class MinecraftHeadsAPI {
-
     private static final String APP_UUID = "ecdf3625-9a93-4481-b8be-a32f25ca1ea0";
     private static final File HEADS_FILE = new File(CLIENT.runDirectory, "headbrowser_cache.json");
     private static final Gson GSON = new GsonBuilder().create();
@@ -63,9 +62,7 @@ public class MinecraftHeadsAPI {
         // Request head data
         AtomicInteger pages = new AtomicInteger(1);
         for(AtomicInteger page = new AtomicInteger(1); page.get() <= pages.get(); page.incrementAndGet()) {
-            Request request = getRequest(builder -> builder.addQueryParameter("page", String.valueOf(page.get())),
-                    CUSTOM_HEADS_ENDPOINT
-            );
+            Request request = getRequest(builder -> builder.addQueryParameter("page", String.valueOf(page.get())), CUSTOM_HEADS_ENDPOINT);
 
             sendRequest(client, request, response -> {
                 JsonObject pagination = response.getAsJsonObject("pagination");
