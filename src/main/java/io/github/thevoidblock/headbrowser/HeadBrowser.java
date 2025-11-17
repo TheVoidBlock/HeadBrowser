@@ -33,11 +33,9 @@ public class HeadBrowser implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         if(CONFIG.modEnabled()) {
-            if (!MinecraftHeadsAPI.readHeads()) {
+            if(!MinecraftHeadsAPI.readHeads()) {
                 MinecraftHeadsAPI.downloadAndSaveHeads();
-            }
-
-            if (currentTimeMillis() - MinecraftHeadsAPI.HEADS.downloadTime > CONFIG.cacheExpirationTime()*1000L) {
+            } else if(currentTimeMillis() - MinecraftHeadsAPI.HEADS.downloadTime > CONFIG.cacheExpirationTime() * 1000L) {
                 LOGGER.info("Heads cache expired. Downloading new heads");
                 MinecraftHeadsAPI.downloadAndSaveHeads();
             }
