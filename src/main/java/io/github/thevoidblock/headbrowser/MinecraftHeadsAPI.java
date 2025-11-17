@@ -147,11 +147,13 @@ public class MinecraftHeadsAPI {
     }
 
     public static void downloadAndSaveHeads() {
-        try {
-            if(downloadDatabase()) saveHeads();
-        } catch (IOException e) {
-            LOGGER.warn("Failed to download Minecraft Heads database", e);
-        }
+        new Thread(() -> {
+            try {
+                if (downloadDatabase()) saveHeads();
+            } catch (IOException e) {
+                LOGGER.warn("Failed to download Minecraft Heads database", e);
+            }
+        }).start();
     }
 
     public record Head(String name, String value, int category, UUID uuid) {
