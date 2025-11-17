@@ -1,0 +1,61 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <flow-layout direction="vertical">
+                    <children>
+                        <label>
+                            <text translate="true">screen.headbrowser.downloading.title</text>
+                            <margins>
+                                <bottom>10</bottom>
+                            </margins>
+                        </label>
+                        <flow-layout direction="horizontal" id="progress-bar-background">
+                            <children>
+                                <box id="progress-bar-foreground">
+                                    <color>green</color>
+                                    <fill>true</fill>
+                                    <sizing>
+                                        <vertical method="fixed">10</vertical>
+                                        <horizontal method="fixed">0</horizontal>
+                                    </sizing>
+                                </box>
+                            </children>
+
+                            <surface>
+                                <flat>gray</flat>
+                            </surface>
+                            <sizing>
+                                <horizontal method="fixed">100</horizontal>
+                            </sizing>
+                        </flow-layout>
+                    </children>
+
+                    <padding>
+                        <all>10</all>
+                    </padding>
+
+                    <surface>
+                        <panel dark="true"/>
+                    </surface>
+
+                    <vertical-alignment>center</vertical-alignment>
+                    <horizontal-alignment>center</horizontal-alignment>
+
+                </flow-layout>
+            </children>
+
+            <padding>
+                <all>20</all>
+            </padding>
+
+            <surface>
+                <options-background />
+            </surface>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+        </flow-layout>
+    </components>
+</owo-ui>

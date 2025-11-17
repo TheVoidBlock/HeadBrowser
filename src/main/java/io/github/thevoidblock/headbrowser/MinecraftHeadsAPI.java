@@ -39,6 +39,8 @@ public class MinecraftHeadsAPI {
     private static final String CATEGORIES_ENDPOINT = "categories";
     private static final UUID DEFAULT_UUID = UUID.fromString("967e3d4f-c3d3-48b9-9989-79387adcbfec");
 
+    public static int STEPS = 0, COMPLETED = 0;
+
     public static HEADS HEADS = new HEADS();
 
     private static boolean downloadDatabase() throws IOException, IllegalStateException {
@@ -57,6 +59,8 @@ public class MinecraftHeadsAPI {
                 String name = category.get("n").getAsString();
                 categories.put(id, name);
             }
+
+            ++COMPLETED;
         });
 
         // Request head data
@@ -67,6 +71,7 @@ public class MinecraftHeadsAPI {
             sendRequest(client, request, response -> {
                 JsonObject pagination = response.getAsJsonObject("pagination");
                 pages.set(pagination.get("last_page").getAsInt());
+                STEPS = 1 + pages.get();
 
                 JsonArray data = response.getAsJsonArray("data");
 
@@ -79,6 +84,8 @@ public class MinecraftHeadsAPI {
                             DEFAULT_UUID
                     ));
                 }
+
+                ++COMPLETED;
             });
         }
 
@@ -152,6 +159,7 @@ public class MinecraftHeadsAPI {
                 if (downloadDatabase()) saveHeads();
             } catch (IOException e) {
                 LOGGER.warn("Failed to download Minecraft Heads database", e);
+                COMPLETED = -1;
             }
         }).start();
     }

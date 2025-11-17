@@ -9,6 +9,7 @@ import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.*;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.container.GridLayout;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -29,8 +30,17 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     private final static Gson GSON = new GsonBuilder().create();
     private final static int PAGES_BEFORE_TRUNCATION = 3;
 
-    public BrowseScreen() {
+    private BrowseScreen() {
         super(FlowLayout.class, DataSource.asset(Identifier.of(MOD_ID, SCREEN_ID)));
+    }
+
+    public static void open(MinecraftClient client) {
+        if(HEADS.data.isEmpty()) {
+            client.setScreen(new DownloadingScreen());
+            return;
+        }
+
+        client.setScreen(new BrowseScreen());
     }
 
     @Override

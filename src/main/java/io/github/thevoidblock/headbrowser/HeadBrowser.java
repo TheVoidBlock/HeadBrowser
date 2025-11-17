@@ -60,11 +60,11 @@ public class HeadBrowser implements ClientModInitializer {
 
     public static ButtonWidget createSquareBrowseButton(int anchorButtonX, int anchorButtonWidth, int y) {
         return new BrowseHeadsButton(
-                anchorButtonX + anchorButtonWidth + BROWSE_BUTTON_OFFSET + CONFIG.titleButtonHorizontalOffset()*CONFIG.offsetMultiplier(),
-                y + CONFIG.titleButtonVerticalOffset()*CONFIG.offsetMultiplier(),
+                anchorButtonX + anchorButtonWidth + BROWSE_BUTTON_OFFSET + CONFIG.titleButtonHorizontalOffset() * CONFIG.offsetMultiplier(),
+                y + CONFIG.titleButtonVerticalOffset() * CONFIG.offsetMultiplier(),
                 BROWSE_BUTTON_DIMENSIONS.width,
                 Text.empty(),
-                button -> CLIENT.setScreen(new BrowseScreen()),
+                button -> BrowseScreen.open(CLIENT),
                 MinecraftHeadsAPI.HEADS.getRandomHead()
         );
     }
@@ -75,7 +75,7 @@ public class HeadBrowser implements ClientModInitializer {
                 0,
                 width,
                 Text.translatable(format("menu.%s.wide-browse-button", MOD_ID)),
-                button -> CLIENT.setScreen(new BrowseScreen()),
+                button -> BrowseScreen.open(CLIENT),
                 MinecraftHeadsAPI.HEADS.getRandomHead()
         );
     }

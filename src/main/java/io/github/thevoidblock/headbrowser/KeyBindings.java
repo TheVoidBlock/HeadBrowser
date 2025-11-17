@@ -23,7 +23,7 @@ public class KeyBindings {
 
     public static void registerBindFunctions() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (BROWSE_HEADS.wasPressed()) client.setScreen(new BrowseScreen());
+            if(BROWSE_HEADS.wasPressed()) BrowseScreen.open(client);
         });
     }
 
