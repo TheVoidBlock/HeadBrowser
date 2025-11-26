@@ -158,7 +158,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                     getItem(headItem);
                 }
 
-                case 1 -> CLIENT.setScreen(new HeadInfoScreen(head, CLIENT.currentScreen));
+                case 1 -> CLIENT.setScreen(new HeadInfoScreen(head));
 
                 case 2 -> CLIENT.setScreen(new ConfirmScreen(Text.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
                     String skinValue = head.value();

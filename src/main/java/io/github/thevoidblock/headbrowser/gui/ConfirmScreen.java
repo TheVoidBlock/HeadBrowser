@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.MOD_ID;
 
-public class ConfirmScreen extends BaseUIModelScreen<FlowLayout> {
+public class ConfirmScreen extends ChildBaseUIModelScreen<FlowLayout> {
     public static final String SCREEN_ID = "confirm_screen";
 
     private final Text message;

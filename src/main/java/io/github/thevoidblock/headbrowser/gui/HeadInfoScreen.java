@@ -8,26 +8,23 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Insets;
 import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.core.VerticalAlignment;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.MOD_ID;
 import static java.lang.String.format;
 
-public class HeadInfoScreen extends BaseUIModelScreen<FlowLayout> {
+public class HeadInfoScreen extends ChildBaseUIModelScreen<FlowLayout> {
     public static final String SCREEN_ID = "head_info_screen";
     private static final int FIELD_WIDTH = 150;
     private static final int FIELD_MARGIN = 5;
     private static final int FIELD_LABEL_OFFSET = 1;
 
     private final MinecraftHeadsAPI.Head head;
-    private final Screen parent;
 
-    public HeadInfoScreen(MinecraftHeadsAPI.Head head, Screen parent) {
+    public HeadInfoScreen(MinecraftHeadsAPI.Head head) {
         super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(Identifier.of(MOD_ID, SCREEN_ID)));
         this.head = head;
-        this.parent = parent;
     }
 
     @Override
@@ -69,11 +66,5 @@ public class HeadInfoScreen extends BaseUIModelScreen<FlowLayout> {
 
         fields.child(fieldLabel);
         fields.child(valueLayout);
-    }
-
-    @Override
-    public void close() {
-        assert this.client != null;
-        this.client.setScreen(parent);
     }
 }
