@@ -15,7 +15,6 @@ import net.minecraft.item.Items;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Language;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -80,8 +79,7 @@ public class MinecraftHeadsAPI {
                     heads.add(new Head(
                             head.get("n").getAsString(),
                             encodeTextureToValue(head.get("u").getAsString()),
-                            head.get("c").getAsInt(),
-                            DEFAULT_UUID
+                            head.get("c").getAsInt()
                     ));
                 }
 
@@ -164,7 +162,7 @@ public class MinecraftHeadsAPI {
         }).start();
     }
 
-    public record Head(String name, String value, int category, UUID uuid) {
+    public record Head(String name, String value, int category) {
         public ItemStack toItem() {
             ItemStack head = Items.PLAYER_HEAD.getDefaultStack();
 
@@ -172,7 +170,7 @@ public class MinecraftHeadsAPI {
             Multimap<String, Property> multimap = HashMultimap.create();
             multimap.put("textures", property);
             PropertyMap propertyMap = new PropertyMap(multimap);
-            GameProfile profile = new GameProfile(this.uuid, "TheVoidBlock", propertyMap);
+            GameProfile profile = new GameProfile(DEFAULT_UUID, "TheVoidBlock", propertyMap);
 
             head.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(profile));
             head.set(DataComponentTypes.CUSTOM_NAME, Text.literal(this.name()).setStyle(Style.EMPTY.withItalic(false)));

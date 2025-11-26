@@ -2,7 +2,7 @@
   "chat.headbrowser.skin-equip": "Equip %s as a skin! Relog to apply.",
   "chat.headbrowser.skin-fail": "Failed to change skin. You are likely on a cracked account, or not connected to the internet.",
 
-  "tooltip.headbrowser.head-options": "Left Click - Get head (Creative only)\nMiddle Click - Equip head as skin",
+  "tooltip.headbrowser.head-options": "Left Click - Get head (Creative only)\nMiddle Click - Equip head as skin\nRight Click - View Head Info",
 
   "alert.headbrowser.head-category-tags": "Cannot get item, as you are not in a world.",
   "alert.headbrowser.download-failed": "Failed to download heads. Check your internet connection and re-launch Minecraft.\nIf the issue still persists, please report this as a bug on the Head Browser GitHub.",
@@ -48,5 +48,11 @@
   "screen.headbrowser.confirm.confirm": "Confirm",
   "screen.headbrowser.confirm.cancel": "Cancel",
 
-  "screen.headbrowser.downloading.title": "Downloading heads..."
+  "screen.headbrowser.downloading.title": "Downloading heads...",
+
+  "screen.headbrowser.head-info.copy": "Copy",
+  "screen.headbrowser.head-info.name": "Name",
+  "screen.headbrowser.head-info.value": "Value",
+  "screen.headbrowser.head-info.category": "Category",
+  "screen.headbrowser.head-info.category-id": "Category ID"
 }
