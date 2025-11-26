@@ -32,7 +32,8 @@ dependencies {
 
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    implementation "com.squareup.okhttp3:okhttp:${project.okhttp_version}"
+    include implementation("com.squareup.okhttp3:okhttp:${project.okhttp_version}")
+    include implementation("com.squareup.okio:okio:${project.okio_version}")
 }
 
 processResources {
