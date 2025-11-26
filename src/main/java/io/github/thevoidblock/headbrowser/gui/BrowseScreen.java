@@ -226,7 +226,6 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     private static class Filter {
-
         public Map<Integer, Boolean> categories = new HashMap<>();
 
         public int page = 1;
