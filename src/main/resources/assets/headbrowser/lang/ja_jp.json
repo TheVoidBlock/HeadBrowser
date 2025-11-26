@@ -2,8 +2,6 @@
   "chat.headbrowser.skin-equip": "%s をスキンとして装備！適用するには再ログインしてください。",
   "chat.headbrowser.skin-fail": "スキン変更に失敗しました。あなたが非正規アカウントであるか、インターネットに接続されていない可能性があります。",
 
-  "tooltip.headbrowser.head-options": "左クリック - ヘッドを取得 (クリエイティブモードのみ)\n右クリック - ヘッドをスキンとして装備",
-
   "alert.headbrowser.head-category-tags": "ワールドに存在しないため、アイテムを取得できません。",
 
   "key.category.headbrowser.main": "ヘッドブラウザー",

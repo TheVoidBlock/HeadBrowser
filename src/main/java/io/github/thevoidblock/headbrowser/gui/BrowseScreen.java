@@ -153,7 +153,12 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         ItemComponent headComponent = Components.item(headItem);
         headComponent.mouseDown().subscribe((click, doubled) -> {
             switch (click.button()) {
-                case 1 -> CLIENT.setScreen(new ConfirmScreen(Text.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
+                case 0 -> {
+                    if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
+                    getItem(headItem);
+                }
+
+                case 2 -> CLIENT.setScreen(new ConfirmScreen(Text.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
                     String skinValue = head.value();
                     byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);
                     String skinValueDecoded = new String(skinValueDecodedBytes, UTF_8);
@@ -179,11 +184,6 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                     else
                         CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-equip", head.name())));
                 }));
-
-                case 0 -> {
-                    if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
-                    getItem(headItem);
-                }
             }
 
             return true;
