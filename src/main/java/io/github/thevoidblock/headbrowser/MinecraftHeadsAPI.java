@@ -202,7 +202,7 @@ public class MinecraftHeadsAPI {
                     .replace("&", "-")
             );
 
-            return Language.getInstance().hasTranslation(translationKey) ? Text.translatable(translationKey) : Text.literal(name);
+            return Text.translatableWithFallback(translationKey, name);
         }
     }
 }
