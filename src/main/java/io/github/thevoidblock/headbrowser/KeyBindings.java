@@ -13,13 +13,11 @@ import static io.github.thevoidblock.headbrowser.HeadBrowser.MOD_ID;
 import static java.lang.String.format;
 
 public class KeyBindings {
-    private static final KeyBinding BROWSE_HEADS = KeyBindingHelper.registerKeyBinding(
-            new KeyBinding(
-                    format("key.%s.%s", MOD_ID, "browse"),
-                    GLFW.GLFW_KEY_KP_1,
-                    new KeyBinding.Category(Identifier.of(MOD_ID, "main"))
-            )
-    );
+    private static final KeyBinding BROWSE_HEADS = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            format("key.%s.%s", MOD_ID, "browse"),
+            GLFW.GLFW_KEY_KP_1,
+            new KeyBinding.Category(Identifier.of(MOD_ID, "main"))
+    ));
 
     public static void registerBindFunctions() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
