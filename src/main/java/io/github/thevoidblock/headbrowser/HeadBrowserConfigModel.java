@@ -15,6 +15,7 @@ public class HeadBrowserConfigModel {
     public boolean titleButton = true;
     public boolean pauseButton = true;
     public boolean autoQuery = false;
+    public boolean tooltipHints = true;
 
     @SectionHeader("advanced")
     public long cacheExpirationTime = 86400;
