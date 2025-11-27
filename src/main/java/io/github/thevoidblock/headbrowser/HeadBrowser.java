@@ -20,7 +20,6 @@ import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 
 public class HeadBrowser implements ClientModInitializer {
-
     public static final String MOD_ID = "headbrowser";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
