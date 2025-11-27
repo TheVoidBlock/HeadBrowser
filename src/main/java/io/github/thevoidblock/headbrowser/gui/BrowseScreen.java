@@ -154,6 +154,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         headComponent.mouseDown().subscribe((click, doubled) -> {
             switch (click.button()) {
                 case 0 -> {
+                    if(!canGetHeadItem()) break;
                     if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
                     getItem(headItem);
                 }

@@ -1,6 +1,5 @@
 package io.github.thevoidblock.headbrowser;
 
-import io.github.thevoidblock.headbrowser.gui.AlertScreen;
 import io.github.thevoidblock.headbrowser.gui.BrowseScreen;
 import io.github.thevoidblock.headbrowser.gui.ErrorScreen;
 import io.github.thevoidblock.headbrowser.gui.widget.BrowseHeadsButton;
@@ -9,8 +8,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.world.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,12 +51,22 @@ public class HeadBrowser implements ClientModInitializer {
         CLIENT.setScreen(new ErrorScreen(message, error));
     }
 
+    public static boolean canGetHeadItem() {
+        return CLIENT.player != null && (CLIENT.player.getGameMode() == GameMode.CREATIVE || CLIENT.isConnectedToLocalServer());
+    }
+
     public static void getItem(ItemStack item) {
-        if(CLIENT.player != null) {
-            CLIENT.setScreen(new InventoryScreen(CLIENT.player));
-            CLIENT.player.currentScreenHandler.setCursorStack(item);
-        } else {
-            CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.head-category-tags")));
+        ClientPlayerEntity player = CLIENT.player;
+        if(player == null) return;
+        CLIENT.setScreen(new InventoryScreen(player));
+        player.currentScreenHandler.setCursorStack(item);
+
+        if(CLIENT.isConnectedToLocalServer()) {
+            MinecraftServer server = CLIENT.getServer();
+            assert server != null;
+            ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+            assert serverPlayer != null;
+            serverPlayer.currentScreenHandler.setCursorStack(item);
         }
     }
 

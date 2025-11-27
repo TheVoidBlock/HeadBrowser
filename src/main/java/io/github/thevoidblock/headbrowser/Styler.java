@@ -4,9 +4,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
-import net.minecraft.world.GameMode;
 
-import static io.github.thevoidblock.headbrowser.HeadBrowser.CLIENT;
 import static io.github.thevoidblock.headbrowser.HeadBrowser.CONFIG;
 import static io.github.thevoidblock.headbrowser.MinecraftHeadsAPI.HEADS;
 
@@ -17,7 +15,7 @@ public class Styler {
 
         MutableText hints = Text.empty().setStyle(Style.EMPTY.withBold(false).withColor(Formatting.WHITE));
 
-        if(CLIENT.player != null && CLIENT.player.getGameMode() == GameMode.CREATIVE) {
+        if(HeadBrowser.canGetHeadItem()) {
             hints.append(Text.translatable("tooltip.headbrowser.head.left-click-option", Text.translatable("tooltip.headbrowser.head.get-head-option")));
             hints.append("\n");
         }
