@@ -4,9 +4,7 @@
   "version": "${version}",
   "name": "HeadBrowser",
   "description": "Client side mod to browse the head database",
-  "authors": [
-    "TheVoidBlock"
-  ],
+  "authors": [ "TheVoidBlock" ],
   "contact": {
     "homepage": "https://modrinth.com/mod/HeadBrowser",
     "sources": "https://github.com/thevoidblock/HeadBrowser",
