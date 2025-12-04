@@ -2,7 +2,7 @@
 ![Minecraft Heads Banner](https://cdn.modrinth.com/data/cached_images/6f3d37c903a07201acae849849b9e3c6d3d7490d_0.webp)
 
 Client side mod to browse over 80,000 heads from the head database ([minecraft-heads.com](https://minecraft-heads.com/)). 
-Requires [Fabric API](https://modrinth.com/mod/fabric-api), [oωo](https://modrinth.com/mod/owo-lib), and (Optionally) [ModMenu](https://modrinth.com/mod/modmenu) for accessing the config.
+Requires [Fabric API](https://modrinth.com/mod/fabric-api), [oωo](https://modrinth.com/mod/owo-lib), [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) and (Optionally) [ModMenu](https://modrinth.com/mod/modmenu) for accessing the config.
 
 You can open the head browser menu by presseing the designated keybinding (default `KP 1`), or by pressing one of the menu buttons.
 
