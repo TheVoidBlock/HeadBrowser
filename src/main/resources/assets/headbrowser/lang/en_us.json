@@ -3,10 +3,12 @@
   "chat.headbrowser.skin-fail": "Failed to change skin. You are likely on a cracked account, or not connected to the internet.",
 
   "tooltip.headbrowser.head.get-head-option": "Get head",
+  "tooltip.headbrowser.head.get-multiple-option": "Get multiple heads",
   "tooltip.headbrowser.head.equip-as-skin-option": "Equip head as skin",
   "tooltip.headbrowser.head.view-head-info-option": "View Head Info",
 
   "tooltip.headbrowser.head.left-click-option": "Left Click - %s",
+  "tooltip.headbrowser.head.alt-left-click-option": "Alt + Left Click - %s",
   "tooltip.headbrowser.head.middle-click-option": "Middle Click - %s",
   "tooltip.headbrowser.head.right-click-option": "Right Click - %s",
 

@@ -1,9 +1,9 @@
 package io.github.thevoidblock.headbrowser;
 
 import io.github.thevoidblock.headbrowser.gui.BrowseScreen;
+import io.github.thevoidblock.headbrowser.gui.BrowserChildCreativeInventoryScreen;
 import io.github.thevoidblock.headbrowser.gui.ErrorScreen;
 import io.github.thevoidblock.headbrowser.gui.widget.BrowseHeadsButton;
-import io.github.thevoidblock.headbrowser.HeadBrowserConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -14,8 +14,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.github.thevoidblock.headbrowser.HeadBrowserConfig;
 
 import java.awt.*;
 
@@ -58,7 +60,8 @@ public class HeadBrowser implements ClientModInitializer {
     public static void getItem(ItemStack item) {
         ClientPlayerEntity player = CLIENT.player;
         if(player == null) return;
-        CLIENT.setScreen(new InventoryScreen(player));
+        if(KeyBindings.isKeyPressed(GLFW.GLFW_KEY_LEFT_ALT)) CLIENT.setScreen(new BrowserChildCreativeInventoryScreen(CLIENT, CLIENT.currentScreen));
+        else CLIENT.setScreen(new InventoryScreen(player));
         player.currentScreenHandler.setCursorStack(item);
 
         if(CLIENT.isConnectedToLocalServer()) {

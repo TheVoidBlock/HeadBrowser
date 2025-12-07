@@ -29,6 +29,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     public static final String SCREEN_ID = "browse_screen";
     private final static Gson GSON = new GsonBuilder().create();
     private final static int PAGES_BEFORE_TRUNCATION = 3;
+    private BuildData buildData;
 
     private BrowseScreen() {
         super(FlowLayout.class, DataSource.asset(Identifier.of(MOD_ID, SCREEN_ID)));
@@ -59,7 +60,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         FlowLayout categories = rootComponent.childById(FlowLayout.class, "categories");
 
         Filter filter = new Filter();
-        BuildData data = new BuildData(
+        buildData = new BuildData(
                 categories,
                 filter,
                 headsGrid,
@@ -70,19 +71,19 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                 rightPageButtons
         );
 
-        rebuildDynamic(data);
-        buildCategories(data);
+        rebuildDynamic();
+        buildCategories();
 
         searchButton.onPress(button -> {
             filter.setSearchQuery(searchBox.getText());
-            rebuildDynamic(data);
+            rebuildDynamic();
         });
 
         searchBox.keyPress().subscribe(keyCode -> {
             ClientTickScheduler.schedule(client -> {
                 if(CONFIG.autoQuery() || keyCode.key() == GLFW.GLFW_KEY_ENTER) {
                     filter.setSearchQuery(searchBox.getText());
-                    rebuildDynamic(data);
+                    rebuildDynamic();
                 }
             }, 0);
             return false;
@@ -90,21 +91,18 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
         nextPageButton.onPress(button -> {
             filter.page++;
-            rebuildDynamic(data);
+            rebuildDynamic();
         });
 
         previousPageButton.onPress(button -> {
             filter.page--;
-            rebuildDynamic(data);
+            rebuildDynamic();
         });
     }
 
-    private static void rebuildDynamic(BuildData data) {
-        rebuildHeadGrid(data.headsGrid, data.filter);
-        rebuildPages(
-                data,
-                calculatePages(data.headsGrid, data.filter.filterAll(MinecraftHeadsAPI.HEADS.data))
-        );
+    private void rebuildDynamic() {
+        rebuildHeadGrid(buildData.filter);
+        rebuildPages(calculatePages(buildData.headsGrid, buildData.filter.filterAll(MinecraftHeadsAPI.HEADS.data)));
     }
 
     private static int calculatePages(GridLayout headsGrid, List<MinecraftHeadsAPI.Head> filteredHeads) {
@@ -114,12 +112,13 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         return (int)Math.ceil((double) filteredHeads.size() / (rows * columns));
     }
 
-    private static void rebuildHeadGrid(GridLayout headsGrid, Filter filter) {
-        clearGrid(headsGrid);
-        buildHeadGrid(headsGrid, filter);
+    private void rebuildHeadGrid(Filter filter) {
+        clearGrid();
+        buildHeadGrid(filter);
     }
 
-    private static void clearGrid(GridLayout headsGrid) {
+    private void clearGrid() {
+        GridLayout headsGrid = buildData.headsGrid;
         int rows = ((GridLayoutAccessor)headsGrid).getRows();
         int columns = ((GridLayoutAccessor)headsGrid).getColumns();
 
@@ -130,7 +129,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         }
     }
 
-    private static void buildHeadGrid(GridLayout headsGrid, Filter filter) {
+    private void buildHeadGrid(Filter filter) {
+        GridLayout headsGrid = buildData.headsGrid;
         int rows = ((GridLayoutAccessor)headsGrid).getRows();
         int columns = ((GridLayoutAccessor)headsGrid).getColumns();
 
@@ -155,7 +155,6 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             switch (click.button()) {
                 case 0 -> {
                     if(!canGetHeadItem()) break;
-                    if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
                     getItem(headItem);
                 }
 
@@ -277,38 +276,34 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         }
     }
 
-    private static void rebuildPages(
-            BuildData data,
+    private void rebuildPages(
             int pages
     ) {
-        data.previousPageButton.active(data.filter.page != 1);
-        data.nextPageButton.active(!(data.filter.page >= pages));
+        buildData.previousPageButton.active(buildData.filter.page != 1);
+        buildData.nextPageButton.active(!(buildData.filter.page >= pages));
 
-        PageList pageButtons = new PageList(data.filter.page, pages);
-        data.leftPageButtons.clearChildren();
-        data.middlePageButtons.clearChildren();
-        data.rightPageButtons.clearChildren();
-        for(int page : pageButtons.left) data.leftPageButtons.child(createPageButton(page, data));
-        for(int page : pageButtons.middle) data.leftPageButtons.child(createPageButton(page, data));
-        for(int page : pageButtons.right) data.leftPageButtons.child(createPageButton(page, data));
+        PageList pageButtons = new PageList(buildData.filter.page, pages);
+        buildData.leftPageButtons.clearChildren();
+        buildData.middlePageButtons.clearChildren();
+        buildData.rightPageButtons.clearChildren();
+        for(int page : pageButtons.left) buildData.leftPageButtons.child(createPageButton(page));
+        for(int page : pageButtons.middle) buildData.leftPageButtons.child(createPageButton(page));
+        for(int page : pageButtons.right) buildData.leftPageButtons.child(createPageButton(page));
     }
 
-    private static ButtonComponent createPageButton(
-            int page,
-            BuildData data
-    ) {
+    private ButtonComponent createPageButton(int page) {
         return Components.button(
                 Text.of(Integer.toString(page)),
                 button -> {
-                    data.filter.setPage(page);
-                    rebuildDynamic(data);
+                    buildData.filter.setPage(page);
+                    rebuildDynamic();
                 }
-        ).active(data.filter.page != page);
+        ).active(buildData.filter.page != page);
     }
 
-    private static void buildCategories(BuildData data) {
-        Map<Integer, Boolean> categories = data.filter.categories;
-        data.categories.clearChildren();
+    private void buildCategories() {
+        Map<Integer, Boolean> categories = buildData.filter.categories;
+        buildData.categories.clearChildren();
         for(Map.Entry<Integer, String> category : HEADS.categories.entrySet()) {
             SmallCheckboxComponent checkbox = Components.smallCheckbox(HEADS.getCategoryText(category.getKey()))
                     .checked(categories.getOrDefault(category.getKey(), true));
@@ -320,12 +315,12 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                 } else {
                     categories.put(category.getKey(), checked);
                 }
-                data.filter.page = 1;
-                rebuildDynamic(data);
-                buildCategories(data);
+                buildData.filter.page = 1;
+                rebuildDynamic();
+                buildCategories();
             });
 
-            data.categories.child(checkbox);
+            buildData.categories.child(checkbox);
         }
     }
 
@@ -349,5 +344,10 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             this.middlePageButtons = middlePageButtons;
             this.rightPageButtons = rightPageButtons;
         }
+    }
+
+    @Override
+    public void onDisplayed() {
+        if(buildData != null) rebuildHeadGrid(buildData.filter);
     }
 }

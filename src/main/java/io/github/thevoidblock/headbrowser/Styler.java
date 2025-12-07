@@ -18,6 +18,8 @@ public class Styler {
         if(HeadBrowser.canGetHeadItem()) {
             hints.append(Text.translatable("tooltip.headbrowser.head.left-click-option", Text.translatable("tooltip.headbrowser.head.get-head-option")));
             hints.append("\n");
+            hints.append(Text.translatable("tooltip.headbrowser.head.alt-left-click-option", Text.translatable("tooltip.headbrowser.head.get-multiple-option")));
+            hints.append("\n");
         }
 
         hints.append(Text.translatable("tooltip.headbrowser.head.middle-click-option", Text.translatable("tooltip.headbrowser.head.equip-as-skin-option")));
