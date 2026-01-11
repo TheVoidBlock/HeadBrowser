@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import io.github.thevoidblock.headbrowser.HeadBrowserConfig;
 
 import java.awt.*;
+import java.io.File;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
@@ -30,6 +31,7 @@ public class HeadBrowser implements ClientModInitializer {
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     public static final String ISSUES_URL = "https://github.com/TheVoidBlock/HeadBrowser/issues/new";
     public static final HeadBrowserConfig CONFIG = HeadBrowserConfig.createAndLoad();
+    public static final File MOD_FOLDER = new File(CLIENT.runDirectory, MOD_ID);
 
     public static final int BROWSE_BUTTON_OFFSET = 4;
     public static final Dimension BROWSE_BUTTON_DIMENSIONS = new Dimension(20, 20);

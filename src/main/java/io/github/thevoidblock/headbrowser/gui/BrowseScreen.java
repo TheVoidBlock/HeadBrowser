@@ -3,6 +3,7 @@ package io.github.thevoidblock.headbrowser.gui;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import io.github.thevoidblock.headbrowser.*;
 import io.github.thevoidblock.headbrowser.mixin.GridLayoutAccessor;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
@@ -15,9 +16,14 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.*;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
@@ -29,7 +35,9 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     public static final String SCREEN_ID = "browse_screen";
     private final static Gson GSON = new GsonBuilder().create();
     private final static int PAGES_BEFORE_TRUNCATION = 3;
+    private final Favorites favorites = new Favorites();
     private BuildData buildData;
+    private boolean favoritesActive = false;
 
     private BrowseScreen() {
         super(FlowLayout.class, DataSource.asset(Identifier.of(MOD_ID, SCREEN_ID)));
@@ -53,6 +61,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         ButtonComponent nextPageButton = rootComponent.childById(ButtonComponent.class, "next-page");
         ButtonComponent previousPageButton = rootComponent.childById(ButtonComponent.class, "previous-page");
 
+        ButtonComponent favoritesButton = rootComponent.childById(ButtonComponent.class, "favorites");
+
         FlowLayout leftPageButtons = rootComponent.childById(FlowLayout.class, "pages-left-section");
         FlowLayout middlePageButtons = rootComponent.childById(FlowLayout.class, "pages-middle-section");
         FlowLayout rightPageButtons = rootComponent.childById(FlowLayout.class, "pages-right-section");
@@ -66,6 +76,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                 headsGrid,
                 nextPageButton,
                 previousPageButton,
+                favoritesButton,
                 leftPageButtons,
                 middlePageButtons,
                 rightPageButtons
@@ -98,11 +109,19 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             filter.page--;
             rebuildDynamic();
         });
+
+        favoritesButton.onPress(button -> {
+            favoritesActive = !favoritesActive;
+            buildData.filter.page = 1;
+            if(favoritesActive) favorites.load();
+            button.setMessage(favoritesActive ? Text.translatable("screen.headbrowser.browse.browser") : Text.translatable("screen.headbrowser.browse.favorites"));
+            rebuildDynamic();
+        });
     }
 
     private void rebuildDynamic() {
         rebuildHeadGrid(buildData.filter);
-        rebuildPages(calculatePages(buildData.headsGrid, buildData.filter.filterAll(MinecraftHeadsAPI.HEADS.data)));
+        rebuildPages(calculatePages(buildData.headsGrid, buildData.filter.filterAll(getHeads())));
     }
 
     private static int calculatePages(GridLayout headsGrid, List<MinecraftHeadsAPI.Head> filteredHeads) {
@@ -134,7 +153,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         int rows = ((GridLayoutAccessor)headsGrid).getRows();
         int columns = ((GridLayoutAccessor)headsGrid).getColumns();
 
-        List<MinecraftHeadsAPI.Head> heads = new ArrayList<>(MinecraftHeadsAPI.HEADS.data);
+        List<MinecraftHeadsAPI.Head> heads = getHeads();
         heads = filter.filterAll(heads);
         heads = filter.filterPage(heads, headsGrid);
 
@@ -148,7 +167,11 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         }
     }
 
-    private static ItemComponent getHeadComponent(MinecraftHeadsAPI.Head head) {
+    private List<MinecraftHeadsAPI.Head> getHeads() {
+        return favoritesActive ? favorites.heads : new ArrayList<>(MinecraftHeadsAPI.HEADS.data);
+    }
+
+    private ItemComponent getHeadComponent(MinecraftHeadsAPI.Head head) {
         ItemStack headItem = head.toItem();
         ItemComponent headComponent = Components.item(headItem);
         headComponent.mouseDown().subscribe((click, doubled) -> {
@@ -158,7 +181,16 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                     getItem(headItem);
                 }
 
-                case 1 -> CLIENT.setScreen(new HeadInfoScreen(head));
+                case 1 -> {
+                    if(KeyBindings.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+                        if(favoritesActive) {
+                            favorites.deleteHead(head);
+                            rebuildDynamic();
+                        } else favorites.saveHead(head);
+                    } else {
+                        CLIENT.setScreen(new HeadInfoScreen(head));
+                    }
+                }
 
                 case 2 -> CLIENT.setScreen(new ConfirmScreen(Text.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
                     String skinValue = head.value();
@@ -196,8 +228,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         return headComponent;
     }
 
-    private static void createHeadComponentTooltip(ItemComponent headComponent, MinecraftHeadsAPI.Head head) {
-        headComponent.tooltip(Styler.StyleHeadTooltip(head.name(), head.category()));
+    private void createHeadComponentTooltip(ItemComponent headComponent, MinecraftHeadsAPI.Head head) {
+        headComponent.tooltip(Styler.StyleHeadTooltip(head.name(), head.category(), favoritesActive));
     }
 
     private static class PageList {
@@ -265,7 +297,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                     i < ((GridLayoutAccessor)headsGrid).getRows() * ((GridLayoutAccessor)headsGrid).getColumns() * (page - 1);
                     i++
             ) {
-                filteredHeads.removeFirst();
+                if(!filteredHeads.isEmpty()) filteredHeads.removeFirst();
             }
 
             return filteredHeads;
@@ -330,19 +362,63 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         GridLayout headsGrid;
         ButtonComponent nextPageButton;
         ButtonComponent previousPageButton;
+        ButtonComponent favoritesButton;
         FlowLayout leftPageButtons;
         FlowLayout middlePageButtons;
         FlowLayout rightPageButtons;
 
-        public BuildData(FlowLayout categories, Filter filter, GridLayout headsGrid, ButtonComponent nextPageButton, ButtonComponent previousPageButton, FlowLayout leftPageButtons, FlowLayout middlePageButtons, FlowLayout rightPageButtons) {
+        public BuildData(FlowLayout categories, Filter filter, GridLayout headsGrid, ButtonComponent nextPageButton, ButtonComponent previousPageButton, ButtonComponent favoritesButton, FlowLayout leftPageButtons, FlowLayout middlePageButtons, FlowLayout rightPageButtons) {
             this.categories = categories;
             this.filter = filter;
             this.headsGrid = headsGrid;
             this.nextPageButton = nextPageButton;
             this.previousPageButton = previousPageButton;
+            this.favoritesButton = favoritesButton;
             this.leftPageButtons = leftPageButtons;
             this.middlePageButtons = middlePageButtons;
             this.rightPageButtons = rightPageButtons;
+        }
+    }
+
+    private static class Favorites {
+        private static final Gson GSON = new GsonBuilder().create();
+        private static final File FILE = new File(MOD_FOLDER, "favorites.json");
+
+        public List<MinecraftHeadsAPI.Head> heads = new ArrayList<>();
+
+        private void save() {
+            //noinspection ResultOfMethodCallIgnored
+            MOD_FOLDER.mkdirs();
+
+            try(FileWriter writer = new FileWriter(FILE)) {
+                writer.write(GSON.toJson(heads));
+            } catch (IOException e) {
+                String errorMessage = "Failed to save favorite heads";
+                presentError(errorMessage, e.toString());
+                LOGGER.error(errorMessage, e);
+            }
+        }
+
+        private void load() {
+            try {
+                heads = GSON.fromJson(Files.readString(FILE.toPath()), new TypeToken<List<MinecraftHeadsAPI.Head>>(){}.getType());
+            } catch (NoSuchFileException ignored) {}
+            catch (IOException e) {
+                String message = "Failed to read favorite heads";
+                presentError(message, e.toString());
+                LOGGER.error(message, e);
+            }
+        }
+
+        public void saveHead(MinecraftHeadsAPI.Head head) {
+            load();
+            heads.add(head);
+            save();
+        }
+
+        public void deleteHead(MinecraftHeadsAPI.Head head) {
+            heads.remove(head);
+            save();
         }
     }
 

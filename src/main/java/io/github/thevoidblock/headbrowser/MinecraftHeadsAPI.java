@@ -31,7 +31,7 @@ import static java.lang.String.format;
 
 public class MinecraftHeadsAPI {
     private static final String APP_UUID = "ecdf3625-9a93-4481-b8be-a32f25ca1ea0";
-    private static final File HEADS_FILE = new File(CLIENT.runDirectory, "headbrowser_cache.json");
+    private static final File HEADS_FILE = new File(MOD_FOLDER, "headbrowser_cache.json");
     private static final Gson GSON = new GsonBuilder().create();
     private static final String MINECRAFT_HEADS_API = "https://minecraft-heads.com/api/heads/";
     private static final String CUSTOM_HEADS_ENDPOINT = "custom-heads";
@@ -125,6 +125,8 @@ public class MinecraftHeadsAPI {
 
     private static void saveHeads() {
         LOGGER.info("Saving heads cache at {}", HEADS_FILE.getPath());
+        //noinspection ResultOfMethodCallIgnored
+        MOD_FOLDER.mkdirs();
         try (FileWriter writer = new FileWriter(HEADS_FILE)) {
             writer.write(GSON.toJson(HEADS));
             LOGGER.info("Saved heads cache successfully!");

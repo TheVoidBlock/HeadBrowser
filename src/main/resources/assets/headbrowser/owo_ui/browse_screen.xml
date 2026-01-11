@@ -125,6 +125,14 @@
                                 <button id="next-page">
                                     <text>&gt;</text>
                                 </button>
+
+                                <button id="favorites">
+                                    <text translate="true">screen.headbrowser.browse.favorites</text>
+
+                                    <margins>
+                                        <left>5</left>
+                                    </margins>
+                                </button>
                             </children>
 
                             <horizontal-alignment>right</horizontal-alignment>

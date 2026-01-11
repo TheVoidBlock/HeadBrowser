@@ -9,7 +9,7 @@ import static io.github.thevoidblock.headbrowser.HeadBrowser.CONFIG;
 import static io.github.thevoidblock.headbrowser.MinecraftHeadsAPI.HEADS;
 
 public class Styler {
-    public static Text StyleHeadTooltip(String name, int categoryId) {
+    public static Text StyleHeadTooltip(String name, int categoryId, boolean favoritesActive) {
         MutableText nameText = (MutableText) Text.of(name);
         nameText.setStyle(Style.EMPTY.withColor(Formatting.YELLOW).withBold(true));
 
@@ -26,6 +26,9 @@ public class Styler {
 
         hints.append("\n");
         hints.append(Text.translatable("tooltip.headbrowser.head.right-click-option", Text.translatable("tooltip.headbrowser.head.view-head-info-option")));
+
+        hints.append("\n");
+        hints.append(Text.translatable("tooltip.headbrowser.head.shift-right-click-option", favoritesActive ? Text.translatable("tooltip.headbrowser.head.remove-from-favorites-option") : Text.translatable("tooltip.headbrowser.head.add-to-favorites-option")));
 
         MutableText categoryInfoText = (MutableText) HEADS.getCategoryText(categoryId);
         categoryInfoText.setStyle(Style.EMPTY.withBold(false).withColor(Formatting.DARK_GRAY));

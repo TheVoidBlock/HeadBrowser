@@ -6,11 +6,14 @@
   "tooltip.headbrowser.head.get-multiple-option": "Get multiple heads",
   "tooltip.headbrowser.head.equip-as-skin-option": "Equip head as skin",
   "tooltip.headbrowser.head.view-head-info-option": "View Head Info",
+  "tooltip.headbrowser.head.add-to-favorites-option": "Add to favorites",
+  "tooltip.headbrowser.head.remove-from-favorites-option": "Remove from favorites",
 
   "tooltip.headbrowser.head.left-click-option": "Left Click - %s",
   "tooltip.headbrowser.head.alt-left-click-option": "Alt + Left Click - %s",
   "tooltip.headbrowser.head.middle-click-option": "Middle Click - %s",
   "tooltip.headbrowser.head.right-click-option": "Right Click - %s",
+  "tooltip.headbrowser.head.shift-right-click-option": "Shift + Right Click - %s",
 
   "alert.headbrowser.download-failed": "Failed to download heads. Check your internet connection and re-launch Minecraft.\nIf the issue still persists, please report this as a bug on the Head Browser GitHub.",
 
@@ -46,6 +49,9 @@
   "screen.headbrowser.browse.category.monsters": "Monsters",
   "screen.headbrowser.browse.category.plants": "Plants",
   "screen.headbrowser.browse.category.helmets": "Helmets",
+
+  "screen.headbrowser.browse.favorites": "Favorites",
+  "screen.headbrowser.browse.browser": "Browser",
 
   "screen.headbrowser.alert.confirm": "Ok",
 
