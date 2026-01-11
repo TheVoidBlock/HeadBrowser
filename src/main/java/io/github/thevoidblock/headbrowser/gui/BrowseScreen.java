@@ -208,10 +208,10 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         public PageList(int page, int pages) {
             if(pages <= 3) {
                 for(int i = 1; i <= pages; i++) middle.add(i);
-            } else if(page <= PAGES_BEFORE_TRUNCATION) {
+            } else if(page < PAGES_BEFORE_TRUNCATION) {
                 for(int i = 1; i <= page + 1; i++) left.add(i);
                 right.add(pages);
-            } else if (page >= pages - PAGES_BEFORE_TRUNCATION) {
+            } else if (page > pages - PAGES_BEFORE_TRUNCATION) {
                 left.add(1);
                 for(int i = page - 1; i <= pages; i++)
                     right.add(i);
