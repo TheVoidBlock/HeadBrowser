@@ -173,7 +173,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
     private ItemComponent getHeadComponent(MinecraftHeadsAPI.Head head) {
         ItemStack headItem = head.toItem();
-        ItemComponent headComponent = Components.item(headItem);
+        ItemComponent headComponent = UIComponents.item(headItem);
         headComponent.mouseDown().subscribe((click, doubled) -> {
             switch (click.button()) {
                 case 0 -> {
@@ -210,13 +210,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                         throw new RuntimeException(errorMessage, e);
                     }
 
-                    SkinChanger.changeSkin(SkinChanger.SKIN_VARIANT.SLIM, skinURL);
-
-                    if (CLIENT.currentScreen != null) CLIENT.currentScreen.close();
-                    if (CLIENT.player != null)
-                        CLIENT.player.sendMessage(Text.translatable("chat.headbrowser.skin-equip", head.name()), false);
-                    else
-                        CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-equip", head.name())));
+                    SkinChanger.changeSkin(SkinChanger.SKIN_VARIANT.SLIM, skinURL, () -> CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.skin-equip", head.name()))));
                 }));
             }
 
@@ -324,7 +318,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     private ButtonComponent createPageButton(int page) {
-        return Components.button(
+        return UIComponents.button(
                 Text.of(Integer.toString(page)),
                 button -> {
                     buildData.filter.setPage(page);
@@ -337,7 +331,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         Map<Integer, Boolean> categories = buildData.filter.categories;
         buildData.categories.clearChildren();
         for(Map.Entry<Integer, String> category : HEADS.categories.entrySet()) {
-            SmallCheckboxComponent checkbox = Components.smallCheckbox(HEADS.getCategoryText(category.getKey()))
+            SmallCheckboxComponent checkbox = UIComponents.smallCheckbox(HEADS.getCategoryText(category.getKey()))
                     .checked(categories.getOrDefault(category.getKey(), true));
 
             checkbox.onChanged().subscribe(checked -> {

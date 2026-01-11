@@ -2,7 +2,7 @@ package io.github.thevoidblock.headbrowser.gui;
 
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
-import io.wispforest.owo.ui.component.Components;
+import io.wispforest.owo.ui.component.UIComponents;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
@@ -31,12 +31,12 @@ public class ErrorScreen extends BaseUIModelScreen<FlowLayout> {
         FlowLayout lines = rootComponent.childById(FlowLayout.class, "lines");
         for(String line : message.lines().toList()) {
             lines.child(
-                    Components.label(Text.of(line))
+                    UIComponents.label(Text.of(line))
             );
         }
         for(String line : error.lines().toList()) {
             lines.child(
-                    Components.label(Text.of(line)).color(Color.RED)
+                    UIComponents.label(Text.of(line)).color(Color.RED)
             );
         }
 

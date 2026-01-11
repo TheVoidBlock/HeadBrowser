@@ -12,7 +12,6 @@ import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
-
     protected TitleScreenMixin(Text title) {
         super(title);
     }

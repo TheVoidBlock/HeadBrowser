@@ -2,54 +2,54 @@ package io.github.thevoidblock.headbrowser;
 
 import com.google.gson.*;
 import io.github.thevoidblock.headbrowser.gui.AlertScreen;
+import io.github.thevoidblock.headbrowser.gui.ChangingSkinScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.StringIdentifiable;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
-import static java.lang.String.format;
 
 public class SkinChanger {
 
     public static final String MINECRAFT_SKIN_API = "https://api.minecraftservices.com/minecraft/profile/skins";
 
-    public static void changeSkin(SKIN_VARIANT skinVariant, URL skinURL) {
-        HttpPost httpPost = new HttpPost(MINECRAFT_SKIN_API);
+    public static void changeSkin(SKIN_VARIANT skinVariant, URL skinURL, Runnable onSuccess) {
+        CLIENT.setScreen(new ChangingSkinScreen());
+
+        OkHttpClient client = new OkHttpClient();
 
         JsonObject jsonBody = new JsonObject();
-        jsonBody.add("variant", new JsonPrimitive(skinVariant.asString()));
-        jsonBody.add("url", new JsonPrimitive(skinURL.toString()));
+        jsonBody.addProperty("variant", skinVariant.asString());
+        jsonBody.addProperty("url", skinURL.toString());
 
-        StringEntity body;
+        Request request = new Request.Builder()
+                .url(MINECRAFT_SKIN_API)
+                .post(RequestBody.create(jsonBody.toString(), MediaType.parse("application/json")))
+                .addHeader("Authorization", "Bearer " + CLIENT.getSession().getAccessToken())
+                .build();
 
-        try {
-            body = new StringEntity(jsonBody.toString());
-        } catch (UnsupportedEncodingException e) {
-            String errorMessage = "Failed to set skin, the JSON string has unsupported encoding.";
-            presentError(errorMessage, e.toString());
-            throw new RuntimeException(errorMessage, e);
-        }
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                CLIENT.execute(() -> CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.skin-fail-network"))));
+            }
 
-        httpPost.setEntity(body);
-        httpPost.setHeader("Content-type", "application/json");
-        httpPost.setHeader("Authorization", format("Bearer %s", CLIENT.getSession().getAccessToken()));
-
-        try (CloseableHttpClient client = HttpClients.createDefault()) {
-            client.execute(httpPost, new BasicResponseHandler());
-        } catch (IOException e) {
-            CLIENT.setScreen(new AlertScreen(Text.translatable("chat.headbrowser.skin-fail")));
-        }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                int code = response.code();
+                if(code == 200) CLIENT.execute(onSuccess);
+                else CLIENT.execute(() -> CLIENT.setScreen(new AlertScreen(
+                        code == 401 ? Text.translatable("alert.headbrowser.skin-fail-session") : Text.translatable("alert.headbrowser.skin-fail-code", code)
+                )));
+            }
+        });
     }
 
-    public static enum SKIN_VARIANT implements StringIdentifiable {
+    public enum SKIN_VARIANT implements StringIdentifiable {
         CLASSIC("classic"),
         SLIM("slim");
 

@@ -1,6 +1,8 @@
 {
-  "chat.headbrowser.skin-equip": "Equip %s as a skin! Relog to apply.",
-  "chat.headbrowser.skin-fail": "Failed to change skin. You are likely on a cracked account, or not connected to the internet.",
+  "alert.headbrowser.skin-equip": "Equip %s as a skin! Relog to apply.",
+  "alert.headbrowser.skin-fail-network": "Failed to change skin (Network unreachable)",
+  "alert.headbrowser.skin-fail-session": "Failed to change skin (Invalid session)",
+  "alert.headbrowser.skin-fail-code": "Failed to change skin (code: %s)",
 
   "tooltip.headbrowser.head.get-head-option": "Get head",
   "tooltip.headbrowser.head.get-multiple-option": "Get multiple heads",
@@ -68,5 +70,7 @@
   "screen.headbrowser.head-info.name": "Name",
   "screen.headbrowser.head-info.value": "Value",
   "screen.headbrowser.head-info.category": "Category",
-  "screen.headbrowser.head-info.category-id": "Category ID"
+  "screen.headbrowser.head-info.category-id": "Category ID",
+
+  "screen.headbrowser.changing-skin": "Changing skin..."
 }

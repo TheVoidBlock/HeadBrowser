@@ -15,7 +15,6 @@ import static io.github.thevoidblock.headbrowser.HeadBrowser.createWideBrowseBut
 
 @Mixin(GameMenuScreen.class)
 public class GameMenuScreenMixin extends Screen {
-
     protected GameMenuScreenMixin(Text title) {
         super(title);
     }
@@ -27,7 +26,7 @@ public class GameMenuScreenMixin extends Screen {
                     value = "INVOKE"
             )
     )
-    private void initWidgets(CallbackInfo ci, @Local GridWidget gridWidget, @Local GridWidget.Adder adder) {
+    private void initWidgets(CallbackInfo ci, @Local GridWidget.Adder adder) {
         if(CONFIG.modEnabled()  && CONFIG.pauseButton()) {
             int returnToGameButtonWidth = 204;
             adder.add(createWideBrowseButton(returnToGameButtonWidth), 2);
