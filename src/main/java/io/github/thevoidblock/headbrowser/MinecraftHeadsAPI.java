@@ -131,9 +131,7 @@ public class MinecraftHeadsAPI {
             writer.write(GSON.toJson(HEADS));
             LOGGER.info("Saved heads cache successfully!");
         } catch (IOException e) {
-            String errorMessage = "Error saving heads cache";
-            presentError(errorMessage, e.toString());
-            throw new RuntimeException(errorMessage, e);
+            error("Error saving heads cache", e);
         }
     }
 
@@ -145,12 +143,10 @@ public class MinecraftHeadsAPI {
             return true;
         } catch (NoSuchFileException e) {
             LOGGER.info("No heads cache was found.");
-            return false;
         } catch (IOException e) {
-            String errorMessage = "Error reading heads cache";
-            presentError(errorMessage, e.toString());
-            throw new RuntimeException(errorMessage, e);
+            error("Error reading heads cache", e);
         }
+        return false;
     }
 
     public static void downloadAndSaveHeads() {

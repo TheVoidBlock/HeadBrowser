@@ -17,7 +17,6 @@ import net.minecraft.world.GameMode;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.github.thevoidblock.headbrowser.HeadBrowserConfig;
 
 import java.awt.*;
 import java.io.File;
@@ -30,7 +29,7 @@ public class HeadBrowser implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     public static final String ISSUES_URL = "https://github.com/TheVoidBlock/HeadBrowser/issues/new";
-    public static final HeadBrowserConfig CONFIG = HeadBrowserConfig.createAndLoad();
+    public static final io.github.thevoidblock.headbrowser.HeadBrowserConfig CONFIG = io.github.thevoidblock.headbrowser.HeadBrowserConfig.createAndLoad();
     public static final File MOD_FOLDER = new File(CLIENT.runDirectory, MOD_ID);
 
     public static final int BROWSE_BUTTON_OFFSET = 4;
@@ -51,8 +50,13 @@ public class HeadBrowser implements ClientModInitializer {
         ClientTickScheduler.register();
     }
 
-    public static void presentError(String message, String error) {
+    private static void presentError(String message, String error) {
         CLIENT.setScreen(new ErrorScreen(message, error));
+    }
+
+    public static void error(String message, Exception e) {
+        LOGGER.error(message, e);
+        if(CLIENT.isFinishedLoading()) presentError(message, e.toString());
     }
 
     public static boolean canGetHeadItem() {

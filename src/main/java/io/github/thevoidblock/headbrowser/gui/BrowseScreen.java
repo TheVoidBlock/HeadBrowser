@@ -200,17 +200,13 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                             .get("textures").getAsJsonObject()
                             .get("SKIN").getAsJsonObject()
                             .get("url").getAsJsonPrimitive().getAsString();
-
-                    URL skinURL;
+                    
                     try {
-                        skinURL = URI.create(skinURLString).toURL();
+                        URL skinURL = URI.create(skinURLString).toURL();
+                        SkinChanger.changeSkin(SkinChanger.SKIN_VARIANT.SLIM, skinURL, () -> CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.skin-equip", head.name()))));
                     } catch (MalformedURLException e) {
-                        String errorMessage = "Attempted to equip skin, but the url was malformed";
-                        presentError(errorMessage, e.toString());
-                        throw new RuntimeException(errorMessage, e);
+                        error("Attempted to equip skin, but the url was malformed", e);
                     }
-
-                    SkinChanger.changeSkin(SkinChanger.SKIN_VARIANT.SLIM, skinURL, () -> CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.skin-equip", head.name()))));
                 }));
             }
 
@@ -387,9 +383,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             try(FileWriter writer = new FileWriter(FILE)) {
                 writer.write(GSON.toJson(heads));
             } catch (IOException e) {
-                String errorMessage = "Failed to save favorite heads";
-                presentError(errorMessage, e.toString());
-                LOGGER.error(errorMessage, e);
+                error("Failed to save favorite heads", e);
             }
         }
 
@@ -398,9 +392,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                 heads = GSON.fromJson(Files.readString(FILE.toPath()), new TypeToken<List<MinecraftHeadsAPI.Head>>(){}.getType());
             } catch (NoSuchFileException ignored) {}
             catch (IOException e) {
-                String message = "Failed to read favorite heads";
-                presentError(message, e.toString());
-                LOGGER.error(message, e);
+                error("Failed to read favorite heads", e);
             }
         }
 
