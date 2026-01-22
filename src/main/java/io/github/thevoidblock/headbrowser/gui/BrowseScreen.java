@@ -25,6 +25,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
 import static io.github.thevoidblock.headbrowser.HeadBrowser.CLIENT;
@@ -86,15 +87,14 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         buildCategories();
 
         searchButton.onPress(button -> {
-            filter.setSearchQuery(searchBox.getText());
-            rebuildDynamic();
+            search(searchBox.getText(), true);
         });
 
         searchBox.keyPress().subscribe(keyCode -> {
             ClientTickScheduler.schedule(client -> {
-                if(CONFIG.autoQuery() || keyCode.key() == GLFW.GLFW_KEY_ENTER) {
-                    filter.setSearchQuery(searchBox.getText());
-                    rebuildDynamic();
+                boolean enter = keyCode.key() == GLFW.GLFW_KEY_ENTER;
+                if(CONFIG.autoQuery() || enter) {
+                    search(searchBox.getText(), enter);
                 }
             }, 0);
             return false;
@@ -116,6 +116,22 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             if(favoritesActive) favorites.load();
             button.setMessage(favoritesActive ? Text.translatable("screen.headbrowser.browse.browser") : Text.translatable("screen.headbrowser.browse.favorites"));
             rebuildDynamic();
+        });
+    }
+
+    private void search(String query, boolean queryPlayer) {
+        buildData.filter.setSearchQuery(query);
+        rebuildDynamic();
+        buildData.filter.prependHeads.clear();
+
+        if(!queryPlayer) return;
+
+        MinecraftAPI.downloadSkin(query).thenAccept(skin -> {
+            CLIENT.execute(() -> {
+                buildData.filter.prependHeads.clear();
+                buildData.filter.prependHeads.add(new MinecraftHeadsAPI.Head(skin.gameProfile().name() + "'s Head", skin.value(), -1));
+                rebuildDynamic();
+            });
         });
     }
 
@@ -203,7 +219,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                     
                     try {
                         URL skinURL = URI.create(skinURLString).toURL();
-                        SkinChanger.changeSkin(SkinChanger.SKIN_VARIANT.SLIM, skinURL, () -> CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.skin-equip", head.name()))));
+                        MinecraftAPI.changeSkin(MinecraftAPI.SKIN_VARIANT.SLIM, skinURL, () -> CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.skin-equip", head.name()))));
                     } catch (MalformedURLException e) {
                         error("Attempted to equip skin, but the url was malformed", e);
                     }
@@ -249,9 +265,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
     private static class Filter {
         public Map<Integer, Boolean> categories = new HashMap<>();
-
         public int page = 1;
-
+        public List<MinecraftHeadsAPI.Head> prependHeads = new ArrayList<>();
         private String searchQuery = "";
 
         public void setSearchQuery(String searchQuery) {
@@ -267,6 +282,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             List<MinecraftHeadsAPI.Head> filteredHeads = new ArrayList<>(heads);
             filteredHeads = filterSearchQuery(filteredHeads);
             filteredHeads = filterCategories(filteredHeads);
+            filteredHeads.addAll(0, prependHeads);
 
             return filteredHeads;
         }
@@ -293,8 +309,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             return filteredHeads;
         }
 
-        public List<MinecraftHeadsAPI.Head> filterCategories(List<MinecraftHeadsAPI.Head> heads) {
-            return heads.stream().filter(head -> categories.getOrDefault(head.category(), true)).toList();
+        public ArrayList<MinecraftHeadsAPI.Head> filterCategories(List<MinecraftHeadsAPI.Head> heads) {
+            return heads.stream().filter(head -> categories.getOrDefault(head.category(), true)).collect(Collectors.toCollection(ArrayList::new));
         }
     }
 

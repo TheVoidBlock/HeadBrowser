@@ -191,6 +191,8 @@ public class MinecraftHeadsAPI {
 
         public Text getCategoryText(int id) {
             String name = categories.get(id);
+            if(id == -1) name = "player-head";
+            if(name == null) name = String.valueOf(id);
 
             String translationKey = format("screen.%s.browse.category.%s", MOD_ID, name
                     .toLowerCase()
