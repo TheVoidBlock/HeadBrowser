@@ -4,7 +4,7 @@
 Client side mod to browse over 80,000 heads from the head database ([minecraft-heads.com](https://minecraft-heads.com/)). 
 Requires [Fabric API](https://modrinth.com/mod/fabric-api), [oωo](https://modrinth.com/mod/owo-lib), [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) and (Optionally) [ModMenu](https://modrinth.com/mod/modmenu) for accessing the config.
 
-You can open the head browser menu by presseing the designated keybinding (default `KP 1`), or by pressing one of the menu buttons.
+You can open the head browser menu by presseing the designated keybinding (default `KP 1`), or by pressing one of the menu buttons. Search for heads from [minecraft-heads.com](https://minecraft-heads.com/), or the head of another player in the text box on the browse menu. Click the categories on the side to apply filters. To select only one category, you can alt+click one of the categories.
 
 ## Demo
 https://github.com/user-attachments/assets/46ffca73-41f0-4283-8c65-4e7df3da5afd
