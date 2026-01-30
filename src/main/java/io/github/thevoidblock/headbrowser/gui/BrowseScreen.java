@@ -86,9 +86,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         rebuildDynamic();
         buildCategories();
 
-        searchButton.onPress(button -> {
-            search(searchBox.getText(), true);
-        });
+        searchButton.onPress(button -> search(searchBox.getText(), true));
 
         searchBox.keyPress().subscribe(keyCode -> {
             ClientTickScheduler.schedule(client -> {
@@ -126,18 +124,16 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
         if(!queryPlayer) return;
 
-        MinecraftAPI.downloadSkin(query).thenAccept(skin -> {
-            CLIENT.execute(() -> {
-                buildData.filter.prependHeads.clear();
-                buildData.filter.prependHeads.add(new MinecraftHeadsAPI.Head(skin.gameProfile().name() + "'s Head", skin.value(), -1));
-                rebuildDynamic();
-            });
-        });
+        MinecraftAPI.downloadSkin(query).thenAccept(skin -> CLIENT.execute(() -> {
+            buildData.filter.prependHeads.clear();
+            buildData.filter.prependHeads.add(new MinecraftHeadsAPI.Head(skin.gameProfile().name() + "'s Head", skin.value(), -1));
+            rebuildDynamic();
+        }));
     }
 
     private void rebuildDynamic() {
         rebuildHeadGrid(buildData.filter);
-        rebuildPages(calculatePages(buildData.headsGrid, buildData.filter.filterAll(getHeads())));
+        rebuildPages(calculatePages(buildData.headsGrid, buildData.filter.filterAll(getHeads(), favoritesActive)));
     }
 
     private static int calculatePages(GridLayout headsGrid, List<MinecraftHeadsAPI.Head> filteredHeads) {
@@ -170,7 +166,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         int columns = ((GridLayoutAccessor)headsGrid).getColumns();
 
         List<MinecraftHeadsAPI.Head> heads = getHeads();
-        heads = filter.filterAll(heads);
+        heads = filter.filterAll(heads, favoritesActive);
         heads = filter.filterPage(heads, headsGrid);
 
         for (int x = 0, i = 0; x < rows; x++) {
@@ -278,11 +274,11 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             this.page = page;
         }
 
-        public List<MinecraftHeadsAPI.Head> filterAll(List<MinecraftHeadsAPI.Head> heads) {
+        public List<MinecraftHeadsAPI.Head> filterAll(List<MinecraftHeadsAPI.Head> heads, boolean favorites) {
             List<MinecraftHeadsAPI.Head> filteredHeads = new ArrayList<>(heads);
             filteredHeads = filterSearchQuery(filteredHeads);
             filteredHeads = filterCategories(filteredHeads);
-            filteredHeads.addAll(0, prependHeads);
+            if(!favorites) filteredHeads.addAll(0, prependHeads);
 
             return filteredHeads;
         }
