@@ -138,7 +138,9 @@ public class MinecraftHeadsAPI {
     public static boolean readHeads() {
         LOGGER.info("Reading heads cache at {}", HEADS_FILE.getPath());
         try {
-            HEADS = GSON.fromJson(Files.readString(HEADS_FILE.toPath()), MinecraftHeadsAPI.HEADS.class);
+            MinecraftHeadsAPI.HEADS readHeads = GSON.fromJson(Files.readString(HEADS_FILE.toPath()), MinecraftHeadsAPI.HEADS.class);
+            if(readHeads == null) return false;
+            HEADS = readHeads;
             LOGGER.info("Read heads cache successfully!");
             return true;
         } catch (NoSuchFileException e) {

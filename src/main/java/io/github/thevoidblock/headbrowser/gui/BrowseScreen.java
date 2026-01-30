@@ -405,7 +405,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
         private void load() {
             try {
-                heads = GSON.fromJson(Files.readString(FILE.toPath()), new TypeToken<List<MinecraftHeadsAPI.Head>>(){}.getType());
+                List<MinecraftHeadsAPI.Head> heads = GSON.fromJson(Files.readString(FILE.toPath()), new TypeToken<List<MinecraftHeadsAPI.Head>>(){}.getType());
+                if(heads != null) this.heads = heads;
             } catch (NoSuchFileException ignored) {}
             catch (IOException e) {
                 error("Failed to read favorite heads", e);
