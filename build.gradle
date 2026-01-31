@@ -25,7 +25,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    include "io.wispforest:owo-lib:${project.owo_version}" // embed owo lib until they publish 1.21.11 to modrinth
+    modImplementation "io.wispforest:owo-lib:${project.owo_version}" // embed owo lib until they publish 1.21.11 to modrinth
     include "io.wispforest:owo-sentinel:${project.owo_version}"
     annotationProcessor modImplementation("io.wispforest:owo-lib:${project.owo_version}")
 
@@ -36,7 +36,7 @@ dependencies {
     include implementation("com.squareup.okhttp3:okhttp:${project.okhttp_version}")
     include implementation("com.squareup.okio:okio:${project.okio_version}")
 
-    modImplementation("net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}")
+    modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 }
 
 processResources {
