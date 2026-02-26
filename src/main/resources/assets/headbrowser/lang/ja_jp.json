@@ -38,7 +38,7 @@
 
   "text.config.headbrowser.section.advanced": "高度な設定",
   "text.config.headbrowser.option.cacheExpirationTime": "ヘッドの一時保存データの保持期間 (秒)",
-  "text.config.headbrowser.option.offsetMultiplier": "タイトルボタン位置調整の倍率",
+  "text.config.headbrowser.option.offsetMultiplier": "タイトルボタンの位置調整倍率",
 
   "screen.headbrowser.browse.category.alphabet": "アルファベット",
   "screen.headbrowser.browse.category.animals": "動物",
