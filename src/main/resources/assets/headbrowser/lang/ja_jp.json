@@ -1,24 +1,44 @@
 {
-  "chat.headbrowser.skin-equip": "%s をスキンとして装備！適用するには再ログインしてください。",
-  "chat.headbrowser.skin-fail": "スキン変更に失敗しました。あなたが非正規アカウントであるか、インターネットに接続されていない可能性があります。",
+  "alert.headbrowser.skin-equip": "%s をスキンとして装備しました！反映するには再ログインしてください",
+  "alert.headbrowser.skin-fail-network": "スキンの変更に失敗しました（ネットワークに接続できません）",
+  "alert.headbrowser.skin-fail-session": "スキンの変更に失敗しました（無効なセッション）",
+  "alert.headbrowser.skin-fail-code": "スキンの変更に失敗しました（エラーコード: %s）",
 
-  "key.category.headbrowser.main": "ヘッドブラウザー",
-  "key.headbrowser.browse": "ヘッドブラウザーを開く",
+  "tooltip.headbrowser.head.get-head-option": "ヘッドを入手",
+  "tooltip.headbrowser.head.get-multiple-option": "複数のヘッドを入手",
+  "tooltip.headbrowser.head.equip-as-skin-option": "ヘッドをスキンとして装備",
+  "tooltip.headbrowser.head.view-head-info-option": "ヘッドの情報を表示",
+  "tooltip.headbrowser.head.add-to-favorites-option": "お気に入りに追加",
+  "tooltip.headbrowser.head.remove-from-favorites-option": "お気に入りから削除",
 
-  "confirm.headbrowser.open-issues": "GitHubの問題を開く",
+  "tooltip.headbrowser.head.left-click-option": "左クリック - %s",
+  "tooltip.headbrowser.head.alt-left-click-option": "Alt + 左クリック - %s",
+  "tooltip.headbrowser.head.middle-click-option": "中央クリック - %s",
+  "tooltip.headbrowser.head.right-click-option": "右クリック - %s",
+  "tooltip.headbrowser.head.shift-right-click-option": "Shift + 右クリック - %s",
 
-  "menu.headbrowser.wide-browse-button": "ヘッドを閲覧",
+  "alert.headbrowser.download-failed": "ヘッドデータのダウンロードに失敗しました。インターネット接続を確認し、Minecraftを再起動してください。\n問題が解決しない場合は、Head BrowserのGitHubにバグ報告をお願いします",
 
-  "text.config.headbrowser.option.modEnabled": "MOD 有効",
-  "text.config.headbrowser.option.titleButtonVerticalOffset": "タイトルボタンの位置補正 (垂直)",
-  "text.config.headbrowser.option.titleButtonHorizontalOffset": "タイトルボタンの位置補正 (水平)",
+  "key.category.headbrowser.main": "Head Browser",
+  "screen.headbrowser.browse.title": "Head Browser",
+  "key.headbrowser.browse": "Head Browserを開く",
+
+  "confirm.headbrowser.open-issues": "GitHubのIssueを開く",
+  "confirm.headbrowser.equip-skin": "%s をスキンとして装備しますか？",
+
+  "menu.headbrowser.wide-browse-button": "ヘッドを検索",
+
+  "text.config.headbrowser.option.modEnabled": "Modを有効にする",
+  "text.config.headbrowser.option.titleButtonVerticalOffset": "タイトルボタンの垂直位置の調整",
+  "text.config.headbrowser.option.titleButtonHorizontalOffset": "タイトルボタンの水平位置の調整",
   "text.config.headbrowser.option.titleButton": "タイトルボタン",
   "text.config.headbrowser.option.pauseButton": "一時停止ボタン",
-  "text.config.headbrowser.option.autoQuery": "自動照会",
+  "text.config.headbrowser.option.autoQuery": "入力中に自動検索",
+  "text.config.headbrowser.option.tooltipHints": "ヘッドのツールチップヒント",
 
-  "text.config.headbrowser.section.advanced": "高度な設定 (これを変更する場合は慎重に)",
-  "text.config.headbrowser.option.cacheExpirationTime": "ヘッドキャッシュの有効期限 (秒)",
-  "text.config.headbrowser.option.offsetMultiplier": "タイトルボタンの位置補正倍率",
+  "text.config.headbrowser.section.advanced": "高度な設定",
+  "text.config.headbrowser.option.cacheExpirationTime": "ヘッドの一時保存データの保持期間 (秒)",
+  "text.config.headbrowser.option.offsetMultiplier": "タイトルボタンの位置調整倍率",
 
   "screen.headbrowser.browse.category.alphabet": "アルファベット",
   "screen.headbrowser.browse.category.animals": "動物",
@@ -26,14 +46,32 @@
   "screen.headbrowser.browse.category.decoration": "装飾",
   "screen.headbrowser.browse.category.food-drinks": "食べ物と飲み物",
   "screen.headbrowser.browse.category.humans": "人間",
-  "screen.headbrowser.browse.category.humanoid": "ヒューマノイド",
+  "screen.headbrowser.browse.category.humanoid": "人型",
   "screen.headbrowser.browse.category.miscellaneous": "その他",
   "screen.headbrowser.browse.category.monsters": "モンスター",
   "screen.headbrowser.browse.category.plants": "植物",
+  "screen.headbrowser.browse.category.helmets": "ヘルメット",
+  "screen.headbrowser.browse.category.player-head": "プレイヤーのヘッド",
+
+  "screen.headbrowser.browse.favorites": "お気に入り",
+  "screen.headbrowser.browse.browser": "ブラウザ",
 
   "screen.headbrowser.alert.confirm": "OK",
 
-  "screen.headbrowser.error.title": "HeadBrowserで問題が発生しました。バグを報告してください！",
+  "screen.headbrowser.error.title": "Head Browserで問題が発生しました。バグ報告をお願いします！",
   "screen.headbrowser.error.copy": "クリップボードにコピー",
-  "screen.headbrowser.error.report": "バグレポートを作成（GitHubのIssue）"
+  "screen.headbrowser.error.report": "バグ報告を作成 (GitHub Issues)",
+
+  "screen.headbrowser.confirm.confirm": "決定",
+  "screen.headbrowser.confirm.cancel": "キャンセル",
+
+  "screen.headbrowser.downloading.title": "ヘッドをダウンロード中...",
+
+  "screen.headbrowser.head-info.copy": "コピー",
+  "screen.headbrowser.head-info.name": "名前",
+  "screen.headbrowser.head-info.value": "値",
+  "screen.headbrowser.head-info.category": "カテゴリ",
+  "screen.headbrowser.head-info.category-id": "カテゴリID",
+
+  "screen.headbrowser.changing-skin": "スキンを変更中..."
 }
