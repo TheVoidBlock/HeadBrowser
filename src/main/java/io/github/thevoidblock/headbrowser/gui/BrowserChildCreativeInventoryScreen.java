@@ -1,32 +1,31 @@
 package io.github.thevoidblock.headbrowser.gui;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.Slot;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-public class BrowserChildCreativeInventoryScreen extends CreativeInventoryScreen {
+public class BrowserChildCreativeInventoryScreen extends CreativeModeInventoryScreen {
     private final Screen parent;
 
-    public BrowserChildCreativeInventoryScreen(MinecraftClient client, Screen parent) {
-        super(Objects.requireNonNull(client.player), client.player.networkHandler.getEnabledFeatures(), client.options.getOperatorItemsTab().getValue());
+    public BrowserChildCreativeInventoryScreen(Minecraft client, Screen parent) {
+        super(Objects.requireNonNull(client.player), client.player.connection.enabledFeatures(), client.options.operatorItemsTab().get());
         this.parent = parent;
     }
 
     @Override
-    public void onMouseClick(@Nullable Slot slot, int slotId, int button, SlotActionType actionType) {
-        super.onMouseClick(slot, slotId, button, actionType);
-        close();
+    protected void slotClicked(final @Nullable Slot slot, final int slotId, final int buttonNum, @NonNull ContainerInput containerInput) {
+        super.slotClicked(slot, slotId, buttonNum, containerInput);
+        onClose();
     }
 
     @Override
-    public void close() {
-        super.close();
-        assert this.client != null;
-        this.client.setScreen(parent);
+    public void onClose() {
+        super.onClose();
+        this.minecraft.setScreen(parent);
     }
 }

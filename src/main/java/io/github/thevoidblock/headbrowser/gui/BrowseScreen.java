@@ -10,10 +10,6 @@ import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.*;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.container.GridLayout;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
@@ -26,6 +22,10 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
 import java.util.stream.Collectors;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
 import static io.github.thevoidblock.headbrowser.HeadBrowser.CLIENT;
@@ -41,10 +41,10 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     private boolean favoritesActive = false;
 
     private BrowseScreen() {
-        super(FlowLayout.class, DataSource.asset(Identifier.of(MOD_ID, SCREEN_ID)));
+        super(FlowLayout.class, DataSource.asset(Identifier.fromNamespaceAndPath(MOD_ID, SCREEN_ID)));
     }
 
-    public static void open(MinecraftClient client) {
+    public static void open(Minecraft client) {
         if(HEADS.data.isEmpty()) {
             client.setScreen(new DownloadingScreen());
             return;
@@ -86,24 +86,24 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         rebuildDynamic();
         buildCategories();
 
-        searchButton.onPress(button -> search(searchBox.getText(), true));
+        searchButton.onPress(_ -> search(searchBox.getValue(), true));
 
         searchBox.keyPress().subscribe(keyCode -> {
-            ClientTickScheduler.schedule(client -> {
+            ClientTickScheduler.schedule(_ -> {
                 boolean enter = keyCode.key() == GLFW.GLFW_KEY_ENTER;
                 if(CONFIG.autoQuery() || enter) {
-                    search(searchBox.getText(), enter);
+                    search(searchBox.getValue(), enter);
                 }
             }, 0);
             return false;
         });
 
-        nextPageButton.onPress(button -> {
+        nextPageButton.onPress(_ -> {
             filter.page++;
             rebuildDynamic();
         });
 
-        previousPageButton.onPress(button -> {
+        previousPageButton.onPress(_ -> {
             filter.page--;
             rebuildDynamic();
         });
@@ -112,7 +112,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
             favoritesActive = !favoritesActive;
             buildData.filter.page = 1;
             if(favoritesActive) favorites.load();
-            button.setMessage(favoritesActive ? Text.translatable("screen.headbrowser.browse.browser") : Text.translatable("screen.headbrowser.browse.favorites"));
+            button.setMessage(favoritesActive ? Component.translatable("screen.headbrowser.browse.browser") : Component.translatable("screen.headbrowser.browse.favorites"));
             rebuildDynamic();
         });
     }
@@ -186,7 +186,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     private ItemComponent getHeadComponent(MinecraftHeadsAPI.Head head) {
         ItemStack headItem = head.toItem();
         ItemComponent headComponent = UIComponents.item(headItem);
-        headComponent.mouseDown().subscribe((click, doubled) -> {
+        headComponent.mouseDown().subscribe((click, _) -> {
             switch (click.button()) {
                 case 0 -> {
                     if(!canGetHeadItem()) break;
@@ -204,7 +204,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                     }
                 }
 
-                case 2 -> CLIENT.setScreen(new ConfirmScreen(Text.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
+                case 2 -> CLIENT.setScreen(new ConfirmScreen(Component.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
                     String skinValue = head.value();
                     byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);
                     String skinValueDecoded = new String(skinValueDecodedBytes, UTF_8);
@@ -215,7 +215,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                     
                     try {
                         URL skinURL = URI.create(skinURLString).toURL();
-                        MinecraftAPI.changeSkin(MinecraftAPI.SKIN_VARIANT.SLIM, skinURL, () -> CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.skin-equip", head.name()))));
+                        MinecraftAPI.changeSkin(MinecraftAPI.SKIN_VARIANT.SLIM, skinURL, () -> CLIENT.setScreen(new AlertScreen(Component.translatable("alert.headbrowser.skin-equip", head.name()))));
                     } catch (MalformedURLException e) {
                         error("Attempted to equip skin, but the url was malformed", e);
                     }
@@ -327,8 +327,8 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
     private ButtonComponent createPageButton(int page) {
         return UIComponents.button(
-                Text.of(Integer.toString(page)),
-                button -> {
+                Component.nullToEmpty(Integer.toString(page)),
+                _ -> {
                     buildData.filter.setPage(page);
                     rebuildDynamic();
                 }
@@ -344,7 +344,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
             checkbox.onChanged().subscribe(checked -> {
                 if(KeyBindings.isKeyPressed(GLFW.GLFW_KEY_LEFT_ALT)) {
-                    HEADS.categories.forEach((id, name) -> categories.put(id, !categories.getOrDefault(id, true)));
+                    HEADS.categories.forEach((id, _) -> categories.put(id, !categories.getOrDefault(id, true)));
                     categories.put(category.getKey(), true);
                 } else {
                     categories.put(category.getKey(), checked);
@@ -422,7 +422,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     @Override
-    public void onDisplayed() {
+    public void added() {
         if(buildData != null) rebuildHeadGrid(buildData.filter);
     }
 }

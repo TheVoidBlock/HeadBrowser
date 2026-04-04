@@ -4,8 +4,6 @@ import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
 import io.github.thevoidblock.headbrowser.gui.AlertScreen;
 import io.github.thevoidblock.headbrowser.gui.ChangingSkinScreen;
-import net.minecraft.text.Text;
-import net.minecraft.util.StringIdentifiable;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +13,9 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.NonNull;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
 
@@ -29,19 +30,19 @@ public class MinecraftAPI {
         OkHttpClient client = new OkHttpClient();
 
         JsonObject jsonBody = new JsonObject();
-        jsonBody.addProperty("variant", skinVariant.asString());
+        jsonBody.addProperty("variant", skinVariant.getSerializedName());
         jsonBody.addProperty("url", skinURL.toString());
 
         Request request = new Request.Builder()
                 .url(CHANGE_SKIN_API)
                 .post(RequestBody.create(jsonBody.toString(), MediaType.parse("application/json")))
-                .addHeader("Authorization", "Bearer " + CLIENT.getSession().getAccessToken())
+                .addHeader("Authorization", "Bearer " + CLIENT.getUser().getAccessToken())
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                CLIENT.execute(() -> CLIENT.setScreen(new AlertScreen(Text.translatable("alert.headbrowser.skin-fail-network"))));
+                CLIENT.execute(() -> CLIENT.setScreen(new AlertScreen(Component.translatable("alert.headbrowser.skin-fail-network"))));
             }
 
             @Override
@@ -49,7 +50,7 @@ public class MinecraftAPI {
                 int code = response.code();
                 if(code == 200) CLIENT.execute(onSuccess);
                 else CLIENT.execute(() -> CLIENT.setScreen(new AlertScreen(
-                        code == 401 ? Text.translatable("alert.headbrowser.skin-fail-session") : Text.translatable("alert.headbrowser.skin-fail-code", code)
+                        code == 401 ? Component.translatable("alert.headbrowser.skin-fail-session") : Component.translatable("alert.headbrowser.skin-fail-code", code)
                 )));
             }
         });
@@ -110,7 +111,7 @@ public class MinecraftAPI {
         return UUID.fromString(builder.toString());
     }
 
-    public enum SKIN_VARIANT implements StringIdentifiable {
+    public enum SKIN_VARIANT implements StringRepresentable {
         CLASSIC("classic"),
         SLIM("slim");
 
@@ -121,7 +122,7 @@ public class MinecraftAPI {
         }
 
         @Override
-        public String asString() {
+        public @NonNull String getSerializedName() {
             return string;
         }
     }

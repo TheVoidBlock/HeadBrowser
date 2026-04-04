@@ -5,15 +5,15 @@ import io.github.thevoidblock.headbrowser.gui.BrowserChildCreativeInventoryScree
 import io.github.thevoidblock.headbrowser.gui.ErrorScreen;
 import io.github.thevoidblock.headbrowser.gui.widget.BrowseHeadsButton;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.world.GameMode;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +27,10 @@ import static java.lang.System.currentTimeMillis;
 public class HeadBrowser implements ClientModInitializer {
     public static final String MOD_ID = "headbrowser";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    public static final Minecraft CLIENT = Minecraft.getInstance();
     public static final String ISSUES_URL = "https://github.com/TheVoidBlock/HeadBrowser/issues/new";
     public static final io.github.thevoidblock.headbrowser.HeadBrowserConfig CONFIG = io.github.thevoidblock.headbrowser.HeadBrowserConfig.createAndLoad();
-    public static final File MOD_FOLDER = new File(CLIENT.runDirectory, MOD_ID);
+    public static final File MOD_FOLDER = new File(CLIENT.gameDirectory, MOD_ID);
 
     public static final int BROWSE_BUTTON_OFFSET = 4;
     public static final Dimension BROWSE_BUTTON_DIMENSIONS = new Dimension(20, 20);
@@ -56,47 +56,47 @@ public class HeadBrowser implements ClientModInitializer {
 
     public static void error(String message, Exception e) {
         LOGGER.error(message, e);
-        if(CLIENT.isFinishedLoading()) presentError(message, e.toString());
+        if(CLIENT.isGameLoadFinished()) presentError(message, e.toString());
     }
 
     public static boolean canGetHeadItem() {
-        return CLIENT.player != null && (CLIENT.player.getGameMode() == GameMode.CREATIVE || CLIENT.isConnectedToLocalServer());
+        return CLIENT.player != null && (CLIENT.player.gameMode() == GameType.CREATIVE || CLIENT.isSingleplayer());
     }
 
     public static void getItem(ItemStack item) {
-        ClientPlayerEntity player = CLIENT.player;
+        LocalPlayer player = CLIENT.player;
         if(player == null) return;
-        if(KeyBindings.isKeyPressed(GLFW.GLFW_KEY_LEFT_ALT)) CLIENT.setScreen(new BrowserChildCreativeInventoryScreen(CLIENT, CLIENT.currentScreen));
+        if(KeyBindings.isKeyPressed(GLFW.GLFW_KEY_LEFT_ALT)) CLIENT.setScreen(new BrowserChildCreativeInventoryScreen(CLIENT, CLIENT.screen));
         else CLIENT.setScreen(new InventoryScreen(player));
-        player.currentScreenHandler.setCursorStack(item);
+        player.containerMenu.setCarried(item);
 
-        if(CLIENT.isConnectedToLocalServer()) {
-            MinecraftServer server = CLIENT.getServer();
+        if(CLIENT.isSingleplayer()) {
+            MinecraftServer server = CLIENT.getSingleplayerServer();
             assert server != null;
-            ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+            ServerPlayer serverPlayer = server.getPlayerList().getPlayer(player.getUUID());
             assert serverPlayer != null;
-            serverPlayer.currentScreenHandler.setCursorStack(item);
+            serverPlayer.containerMenu.setCarried(item);
         }
     }
 
-    public static ButtonWidget createSquareBrowseButton(int anchorButtonX, int anchorButtonWidth, int y) {
+    public static Button createSquareBrowseButton(int anchorButtonX, int anchorButtonWidth, int y) {
         return new BrowseHeadsButton(
                 anchorButtonX + anchorButtonWidth + BROWSE_BUTTON_OFFSET + CONFIG.titleButtonHorizontalOffset() * CONFIG.offsetMultiplier(),
                 y + CONFIG.titleButtonVerticalOffset() * CONFIG.offsetMultiplier(),
                 BROWSE_BUTTON_DIMENSIONS.width,
-                Text.empty(),
-                button -> BrowseScreen.open(CLIENT),
+                Component.empty(),
+                _ -> BrowseScreen.open(CLIENT),
                 MinecraftHeadsAPI.HEADS.getRandomHead()
         );
     }
 
-    public static ButtonWidget createWideBrowseButton(int width) {
+    public static Button createWideBrowseButton(int width) {
         return new BrowseHeadsButton(
                 0,
                 0,
                 width,
-                Text.translatable(format("menu.%s.wide-browse-button", MOD_ID)),
-                button -> BrowseScreen.open(CLIENT),
+                Component.translatable(format("menu.%s.wide-browse-button", MOD_ID)),
+                _ -> BrowseScreen.open(CLIENT),
                 MinecraftHeadsAPI.HEADS.getRandomHead()
         );
     }

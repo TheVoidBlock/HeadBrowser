@@ -8,8 +8,8 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Insets;
 import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.core.VerticalAlignment;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.MOD_ID;
 import static java.lang.String.format;
@@ -23,7 +23,7 @@ public class HeadInfoScreen extends ChildBaseUIModelScreen<FlowLayout> {
     private final MinecraftHeadsAPI.Head head;
 
     public HeadInfoScreen(MinecraftHeadsAPI.Head head) {
-        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(Identifier.of(MOD_ID, SCREEN_ID)));
+        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(Identifier.fromNamespaceAndPath(MOD_ID, SCREEN_ID)));
         this.head = head;
     }
 
@@ -33,10 +33,10 @@ public class HeadInfoScreen extends ChildBaseUIModelScreen<FlowLayout> {
         headItem.stack(head.toItem());
 
         LabelComponent headLabel = rootComponent.childById(LabelComponent.class, "head-label");
-        headLabel.text(Text.literal(head.name()));
+        headLabel.text(Component.literal(head.name()));
 
         ButtonComponent confirmButton = rootComponent.childById(ButtonComponent.class, "confirm");
-        confirmButton.onPress(button -> this.close());
+        confirmButton.onPress(_ -> this.onClose());
 
         FlowLayout fields = rootComponent.childById(FlowLayout.class, "fields");
         addField(fields, "name", head.name());
@@ -46,7 +46,7 @@ public class HeadInfoScreen extends ChildBaseUIModelScreen<FlowLayout> {
     }
 
     private void addField(FlowLayout fields, String field, String value) {
-        LabelComponent fieldLabel = UIComponents.label(Text.translatableWithFallback(format("screen.%s.head-info.%s", MOD_ID, field), field));
+        LabelComponent fieldLabel = UIComponents.label(Component.translatableWithFallback(format("screen.%s.head-info.%s", MOD_ID, field), field));
         fieldLabel.margins(Insets.left(FIELD_LABEL_OFFSET));
 
         FlowLayout valueLayout = UIContainers.horizontalFlow(Sizing.content(), Sizing.content());
@@ -56,10 +56,7 @@ public class HeadInfoScreen extends ChildBaseUIModelScreen<FlowLayout> {
         TextBoxComponent valueTextBox = UIComponents.textBox(Sizing.fixed(FIELD_WIDTH)).text(value);
         valueTextBox.active = false;
 
-        ButtonComponent copyButton = UIComponents.button(Text.translatable(format("screen.%s.head-info.copy", MOD_ID)), button -> {
-            assert this.client != null;
-            this.client.keyboard.setClipboard(value);
-        });
+        ButtonComponent copyButton = UIComponents.button(Component.translatable(format("screen.%s.head-info.copy", MOD_ID)), _ -> this.minecraft.keyboardHandler.setClipboard(value));
 
         valueLayout.child(valueTextBox);
         valueLayout.child(copyButton);

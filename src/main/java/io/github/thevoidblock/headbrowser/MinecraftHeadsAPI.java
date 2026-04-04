@@ -7,14 +7,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import io.github.thevoidblock.headbrowser.util.ThrowingConsumer;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +17,14 @@ import java.nio.file.NoSuchFileException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
 import static java.lang.String.format;
@@ -119,7 +119,7 @@ public class MinecraftHeadsAPI {
     }
 
     private static String encodeTextureToValue(String texture) {
-        String json = format("{\"textures\":{\"SKIN\":{\"url\":\"http://textures.minecraft.net/texture/%s\"}}}", texture);
+        String json = format("{\"textures\":{\"SKIN\":{\"url\":\"https://textures.minecraft.net/texture/%s\"}}}", texture);
         return Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -164,7 +164,7 @@ public class MinecraftHeadsAPI {
 
     public record Head(String name, String value, int category) {
         public ItemStack toItem() {
-            ItemStack head = Items.PLAYER_HEAD.getDefaultStack();
+            ItemStack head = Items.PLAYER_HEAD.getDefaultInstance();
 
             Property property = new Property("textures", this.value);
             Multimap<String, Property> multimap = HashMultimap.create();
@@ -172,9 +172,9 @@ public class MinecraftHeadsAPI {
             PropertyMap propertyMap = new PropertyMap(multimap);
             GameProfile profile = new GameProfile(DEFAULT_UUID, "TheVoidBlock", propertyMap);
 
-            head.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(profile));
-            head.set(DataComponentTypes.CUSTOM_NAME, Text.literal(this.name()).setStyle(Style.EMPTY.withItalic(false)));
-            head.set(DataComponentTypes.LORE, new LoreComponent(Collections.singletonList(Text.literal("Head Browser mod by TheVoidBlock").formatted(Formatting.DARK_GRAY))));
+            head.set(DataComponents.PROFILE, ResolvableProfile.createResolved(profile));
+            head.set(DataComponents.CUSTOM_NAME, Component.literal(this.name()).setStyle(Style.EMPTY.withItalic(false)));
+            head.set(DataComponents.LORE, new ItemLore(Collections.singletonList(Component.literal("Head Browser mod by TheVoidBlock").withStyle(ChatFormatting.DARK_GRAY))));
             return head;
         }
     }
@@ -188,10 +188,10 @@ public class MinecraftHeadsAPI {
             Random random = new Random();
 
             if(!data.isEmpty()) return data.get(random.nextInt(0, data.size())).toItem();
-            else return Items.PLAYER_HEAD.getDefaultStack();
+            else return Items.PLAYER_HEAD.getDefaultInstance();
         }
 
-        public Text getCategoryText(int id) {
+        public Component getCategoryText(int id) {
             String name = categories.get(id);
             if(id == -1) name = "player-head";
             if(name == null) name = String.valueOf(id);
@@ -202,7 +202,7 @@ public class MinecraftHeadsAPI {
                     .replace("&", "-")
             );
 
-            return Text.translatableWithFallback(translationKey, name);
+            return Component.translatableWithFallback(translationKey, name);
         }
     }
 }

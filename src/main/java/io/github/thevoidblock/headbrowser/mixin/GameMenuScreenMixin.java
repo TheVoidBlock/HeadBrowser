@@ -1,10 +1,10 @@
 package io.github.thevoidblock.headbrowser.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.client.gui.screen.GameMenuScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.screens.PauseScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,23 +13,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static io.github.thevoidblock.headbrowser.HeadBrowser.CONFIG;
 import static io.github.thevoidblock.headbrowser.HeadBrowser.createWideBrowseButton;
 
-@Mixin(GameMenuScreen.class)
+@Mixin(PauseScreen.class)
 public class GameMenuScreenMixin extends Screen {
-    protected GameMenuScreenMixin(Text title) {
+    protected GameMenuScreenMixin(Component title) {
         super(title);
     }
 
     @Inject(
-            method = "initWidgets",
+            method = "createPauseMenu",
             at = @At(
-                    target = "Lnet/minecraft/client/gui/widget/GridWidget;refreshPositions()V",
+                    target = "Lnet/minecraft/client/gui/layouts/GridLayout;arrangeElements()V",
                     value = "INVOKE"
             )
     )
-    private void initWidgets(CallbackInfo ci, @Local GridWidget.Adder adder) {
+    private void initWidgets(CallbackInfo ci, @Local(name = "helper") GridLayout.RowHelper helper) {
         if(CONFIG.modEnabled()  && CONFIG.pauseButton()) {
             int returnToGameButtonWidth = 204;
-            adder.add(createWideBrowseButton(returnToGameButtonWidth), 2);
+            helper.addChild(createWideBrowseButton(returnToGameButtonWidth), 2);
         }
     }
 }

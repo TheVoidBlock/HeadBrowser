@@ -2,7 +2,7 @@ package io.github.thevoidblock.headbrowser.gui;
 
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.core.ParentUIComponent;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.NotNull;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.CLIENT;
@@ -16,12 +16,11 @@ public abstract class ChildBaseUIModelScreen<R extends ParentUIComponent> extend
     }
 
     protected ChildBaseUIModelScreen(Class<R> rootComponentClass, @NotNull BaseUIModelScreen.DataSource source) {
-        this(rootComponentClass, source, CLIENT.currentScreen);
+        this(rootComponentClass, source, CLIENT.screen);
     }
 
     @Override
-    public void close() {
-        assert this.client != null;
-        this.client.setScreen(parent);
+    public void onClose() {
+        this.minecraft.setScreen(parent);
     }
 }

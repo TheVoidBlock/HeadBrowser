@@ -8,6 +8,7 @@ import static io.github.thevoidblock.headbrowser.HeadBrowser.MOD_ID;
 
 @Modmenu(modId = MOD_ID)
 @Config(name = MOD_ID, wrapperName = "HeadBrowserConfig")
+@SuppressWarnings("unused")
 public class HeadBrowserConfigModel {
     public boolean modEnabled = true;
     public int titleButtonVerticalOffset = 0;

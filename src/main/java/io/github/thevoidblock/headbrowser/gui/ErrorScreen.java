@@ -5,9 +5,9 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.UIComponents;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 
 import static io.github.thevoidblock.headbrowser.HeadBrowser.*;
@@ -21,7 +21,7 @@ public class ErrorScreen extends BaseUIModelScreen<FlowLayout> {
     private final String error;
 
     public ErrorScreen(String message, String error) {
-        super(FlowLayout.class, DataSource.asset(Identifier.of(MOD_ID, SCREEN_ID)));
+        super(FlowLayout.class, DataSource.asset(Identifier.fromNamespaceAndPath(MOD_ID, SCREEN_ID)));
         this.message = message;
         this.error = error;
     }
@@ -31,26 +31,26 @@ public class ErrorScreen extends BaseUIModelScreen<FlowLayout> {
         FlowLayout lines = rootComponent.childById(FlowLayout.class, "lines");
         for(String line : message.lines().toList()) {
             lines.child(
-                    UIComponents.label(Text.of(line))
+                    UIComponents.label(Component.nullToEmpty(line))
             );
         }
         for(String line : error.lines().toList()) {
             lines.child(
-                    UIComponents.label(Text.of(line)).color(Color.RED)
+                    UIComponents.label(Component.nullToEmpty(line)).color(Color.RED)
             );
         }
 
-        rootComponent.childById(ButtonComponent.class, "copy").onPress(button ->
-                CLIENT.keyboard.setClipboard(format("%s%n%s", this.message, this.error))
+        rootComponent.childById(ButtonComponent.class, "copy").onPress(_ ->
+                CLIENT.keyboardHandler.setClipboard(format("%s%n%s", this.message, this.error))
         );
 
-        rootComponent.childById(ButtonComponent.class, "issues").onPress(button ->
+        rootComponent.childById(ButtonComponent.class, "issues").onPress(_ ->
                 CLIENT.setScreen(new ConfirmLinkScreen(
                         confirmed -> {
-                            if(confirmed) Util.getOperatingSystem().open(ISSUES_URL);
+                            if(confirmed) Util.getPlatform().openUri(ISSUES_URL);
                             CLIENT.setScreen(this);
                         },
-                        Text.literal("confirm.headbrowser.open-issues"),
+                        Component.literal("confirm.headbrowser.open-issues"),
                         ISSUES_URL,
                         true
         )));
