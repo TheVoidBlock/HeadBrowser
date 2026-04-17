@@ -28,6 +28,8 @@
 
   "menu.headbrowser.wide-browse-button": "Browse Heads",
 
+  "text.config.headbrowser.title": "Head Browser",
+
   "text.config.headbrowser.option.modEnabled": "Mod enabled",
   "text.config.headbrowser.option.titleButtonVerticalOffset": "Title button offset (Vertical)",
   "text.config.headbrowser.option.titleButtonHorizontalOffset": "Title button offset (Horizontal)",
