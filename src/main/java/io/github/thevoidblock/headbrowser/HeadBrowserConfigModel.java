@@ -11,12 +11,12 @@ import static io.github.thevoidblock.headbrowser.HeadBrowser.MOD_ID;
 @SuppressWarnings("unused")
 public class HeadBrowserConfigModel {
     public boolean modEnabled = true;
+    public boolean tooltipHints = true;
+    public boolean autoQuery = false;
+    public boolean pauseButton = true;
+    public boolean titleButton = true;
     public int titleButtonVerticalOffset = 0;
     public int titleButtonHorizontalOffset = 0;
-    public boolean titleButton = true;
-    public boolean pauseButton = true;
-    public boolean autoQuery = false;
-    public boolean tooltipHints = true;
 
     @SectionHeader("advanced")
     public long cacheExpirationTime = 86400;
