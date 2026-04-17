@@ -9,17 +9,24 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.WorldLoader;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.WorldDataConfiguration;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
@@ -46,8 +53,31 @@ public class HeadBrowser implements ClientModInitializer {
             }
         }
 
+        try {
+            new ItemStack(() -> Items.PLAYER_HEAD);
+        } catch (NullPointerException e) {
+            if(e.getMessage().equals("Components not bound yet"))
+                loadWorld();
+        }
+
         KeyBindings.registerBindFunctions();
         ClientTickScheduler.register();
+    }
+
+    private static void loadWorld() {
+        WorldLoader.PackConfig packConfig = new WorldLoader.PackConfig(CLIENT.getResourcePackRepository(), WorldDataConfiguration.DEFAULT, false, true);
+        WorldLoader.InitConfig loadConfig = new WorldLoader.InitConfig(packConfig, Commands.CommandSelection.INTEGRATED, LevelBasedPermissionSet.ALL_PERMISSIONS);
+
+        WorldLoader.load(
+                loadConfig,
+                context -> new WorldLoader.DataLoadOutput<>(Optional.empty(), context.datapackDimensions()),
+                (resourceManager, _, _, _) -> {
+                    resourceManager.close();
+                    return Optional.empty();
+                },
+                Util.backgroundExecutor(),
+                CLIENT
+        );
     }
 
     private static void presentError(String message, String error) {
