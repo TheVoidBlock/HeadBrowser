@@ -39,7 +39,7 @@
   "text.config.headbrowser.option.tooltipHints": "Head Tooltip Hints",
 
   "text.config.headbrowser.section.advanced": "Advanced",
-  "text.config.headbrowser.option.cacheExpirationTime": "Head cache expiration time (Seconds).",
+  "text.config.headbrowser.option.cacheExpirationTime": "Head cache expiration time (Seconds)",
   "text.config.headbrowser.option.offsetMultiplier": "Title button offset multiplier",
 
   "screen.headbrowser.browse.category.alphabet": "Alphabet",
