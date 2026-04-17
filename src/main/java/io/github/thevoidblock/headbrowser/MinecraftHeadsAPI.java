@@ -44,6 +44,7 @@ public class MinecraftHeadsAPI {
 
     private static boolean downloadDatabase() throws IOException, IllegalStateException {
         LOGGER.info("Starting Head database download...");
+        long downloadStart = System.currentTimeMillis();
 
         List<Head> heads = new ArrayList<>();
         Map<Integer, String> categories = new HashMap<>();
@@ -89,7 +90,11 @@ public class MinecraftHeadsAPI {
 
         HEADS.data = heads;
         HEADS.categories = categories;
-        LOGGER.info("Finished Head database download");
+        HEADS.downloadTime = System.currentTimeMillis();
+
+        long downloadEnd = System.currentTimeMillis();
+
+        LOGGER.info("Finished Head database download in {}ms", downloadEnd - downloadStart);
         return true;
     }
 
@@ -181,7 +186,7 @@ public class MinecraftHeadsAPI {
 
     public static class HEADS {
         public List<Head> data = new ArrayList<>();
-        public long downloadTime = System.currentTimeMillis();
+        public long downloadTime;
         public Map<Integer, String> categories = new HashMap<>();
 
         public ItemStack getRandomHead() {
