@@ -36,7 +36,7 @@
   "text.config.headbrowser.option.titleButton": "Title button",
   "text.config.headbrowser.option.pauseButton": "Pause button",
   "text.config.headbrowser.option.autoQuery": "Automatic Query",
-  "text.config.headbrowser.option.tooltipHints": "Head Tooltip Hints",
+  "text.config.headbrowser.option.tooltipHints": "Tooltip Hints",
 
   "text.config.headbrowser.section.advanced": "Advanced",
   "text.config.headbrowser.option.cacheExpirationTime": "Head cache expiration time (Seconds)",
