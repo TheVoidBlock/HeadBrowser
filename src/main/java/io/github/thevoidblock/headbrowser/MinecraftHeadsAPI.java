@@ -174,7 +174,7 @@ public class MinecraftHeadsAPI {
 
             head.set(DataComponents.PROFILE, ResolvableProfile.createResolved(profile));
             head.set(DataComponents.CUSTOM_NAME, Component.literal(this.name()).setStyle(Style.EMPTY.withItalic(false)));
-            head.set(DataComponents.LORE, new ItemLore(Collections.singletonList(Component.literal("Head Browser mod by TheVoidBlock").withStyle(ChatFormatting.DARK_GRAY))));
+            head.set(DataComponents.LORE, new ItemLore(Collections.singletonList(Component.literal("Head Browser by TheVoidBlock").withStyle(ChatFormatting.DARK_GRAY))));
             return head;
         }
     }
