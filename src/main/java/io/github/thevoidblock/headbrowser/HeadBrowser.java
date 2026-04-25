@@ -7,6 +7,7 @@ import io.github.thevoidblock.headbrowser.gui.widget.BrowseHeadsButton;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.Commands;
@@ -53,15 +54,22 @@ public class HeadBrowser implements ClientModInitializer {
             }
         }
 
-        try {
-            new ItemStack(() -> Items.PLAYER_HEAD);
-        } catch (NullPointerException e) {
-            if(e.getMessage().equals("Components not bound yet"))
-                loadWorld();
+        if(!componentsBound()) {
+            loadWorld();
         }
 
         KeyBindings.registerBindFunctions();
         ClientTickScheduler.register();
+    }
+
+    public static boolean componentsBound() {
+        try {
+            new ItemStack(() -> Items.PLAYER_HEAD);
+        } catch (NullPointerException e) {
+            return false;
+        }
+
+        return true;
     }
 
     private static void loadWorld() {
@@ -73,6 +81,11 @@ public class HeadBrowser implements ClientModInitializer {
                 context -> new WorldLoader.DataLoadOutput<>(Optional.empty(), context.datapackDimensions()),
                 (resourceManager, _, _, _) -> {
                     resourceManager.close();
+
+                    if(CLIENT.screen instanceof TitleScreen) {
+                        CLIENT.setScreen(new TitleScreen());
+                    }
+
                     return Optional.empty();
                 },
                 Util.backgroundExecutor(),

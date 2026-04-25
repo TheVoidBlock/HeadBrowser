@@ -19,7 +19,7 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "createNormalMenuOptions", at = @At("TAIL"))
     private void init(int topPos, int spacing, CallbackInfoReturnable<Integer> cir) {
-        if(CONFIG.modEnabled() && CONFIG.titleButton()) {
+        if(CONFIG.modEnabled() && CONFIG.titleButton() && componentsBound()) {
             int singlePlayerButtonWidth = 200;
             int singlePlayerButtonX = this.width / 2 - singlePlayerButtonWidth / 2;
 
