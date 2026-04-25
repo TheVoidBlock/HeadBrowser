@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Create a bug report
 title: "[BUG]"
 labels: bug
 assignees: ''
@@ -20,11 +20,8 @@ Steps to reproduce the behavior:
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
 **Desktop (please complete the following information):**
- - OS: [e.g. Linux, Windows, MacOS]
+ - OS [e.g. Linux, Windows, MacOS]
  - Minecraft Version [e.g. 1.21.1, 1.21.4]
  - Mod Version [e.g. 1.0-Beta.1+1.21]
 
