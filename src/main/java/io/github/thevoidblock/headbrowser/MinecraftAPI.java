@@ -62,7 +62,7 @@ public class MinecraftAPI {
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-                    .url(QUERY_SKIN_API + gameProfile.id().toString().replaceAll("-", ""))
+                    .url(QUERY_SKIN_API + gameProfile.id().toString().replace("-", ""))
                     .get()
                     .build();
 
