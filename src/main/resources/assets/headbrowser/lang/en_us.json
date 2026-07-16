@@ -75,5 +75,7 @@
   "screen.headbrowser.head-info.category": "Category",
   "screen.headbrowser.head-info.category-id": "Category ID",
 
-  "screen.headbrowser.changing-skin": "Changing skin..."
+  "screen.headbrowser.changing-skin": "Changing skin...",
+
+  "loading.headbrowser.resources": "Loading resources..."
 }

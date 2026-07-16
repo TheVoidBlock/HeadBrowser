@@ -7,14 +7,18 @@ import io.github.thevoidblock.headbrowser.gui.widget.BrowseHeadsButton;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldLoader;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.server.packs.repository.ServerPacksSource;
 import net.minecraft.server.permissions.LevelBasedPermissionSet;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
@@ -54,10 +59,6 @@ public class HeadBrowser implements ClientModInitializer {
             }
         }
 
-        if(!componentsBound()) {
-            loadWorld();
-        }
-
         KeyBindings.registerBindFunctions();
         ClientTickScheduler.register();
     }
@@ -72,25 +73,14 @@ public class HeadBrowser implements ClientModInitializer {
         return true;
     }
 
-    private static void loadWorld() {
-        WorldLoader.PackConfig packConfig = new WorldLoader.PackConfig(CLIENT.getResourcePackRepository(), WorldDataConfiguration.DEFAULT, false, true);
-        WorldLoader.InitConfig loadConfig = new WorldLoader.InitConfig(packConfig, Commands.CommandSelection.INTEGRATED, LevelBasedPermissionSet.ALL_PERMISSIONS);
-
-        WorldLoader.load(
-                loadConfig,
-                context -> new WorldLoader.DataLoadOutput<>(Optional.empty(), context.datapackDimensions()),
-                (resourceManager, _, _, _) -> {
-                    resourceManager.close();
-
-                    if(CLIENT.screen instanceof TitleScreen) {
-                        CLIENT.setScreen(new TitleScreen());
-                    }
-
-                    return Optional.empty();
-                },
-                Util.backgroundExecutor(),
-                CLIENT
-        );
+    public static CompletableFuture<Optional<WorldCreationContext>> loadResources() {
+        PackRepository vanillaOnlyPackRepository = new PackRepository(new ServerPacksSource(CLIENT.directoryValidator()));
+        WorldLoader.PackConfig packConfig = new WorldLoader.PackConfig(vanillaOnlyPackRepository, WorldDataConfiguration.DEFAULT, false, true);
+        WorldLoader.InitConfig loadConfig = new WorldLoader.InitConfig(packConfig, Commands.CommandSelection.INTEGRATED, LevelBasedPermissionSet.GAMEMASTER);
+        return WorldLoader.load(loadConfig, (context) -> new WorldLoader.DataLoadOutput<>(Optional.empty(), context.datapackDimensions()), (resources, _, _, _) -> {
+            resources.close();
+            return Optional.empty();
+        }, Util.backgroundExecutor(), CLIENT);
     }
 
     private static void presentError(String message, String error) {
@@ -122,15 +112,21 @@ public class HeadBrowser implements ClientModInitializer {
         }
     }
 
-    public static Button createSquareBrowseButton(int anchorButtonX, int anchorButtonWidth, int y) {
-        return new BrowseHeadsButton(
+    public static Button createTitleButton(int anchorButtonX, int anchorButtonWidth, int y) {
+        int width = BROWSE_BUTTON_DIMENSIONS.width;
+        int height = BROWSE_BUTTON_DIMENSIONS.height;
+
+        Button button = SpriteIconButton.builder(Component.empty(), _ -> BrowseScreen.open(CLIENT), true)
+                .sprite(Identifier.fromNamespaceAndPath(MOD_ID, "icon/browse"), width, height)
+                .size(width, height)
+                .build();
+
+        button.setPosition(
                 anchorButtonX + anchorButtonWidth + BROWSE_BUTTON_OFFSET + CONFIG.titleButtonHorizontalOffset() * CONFIG.offsetMultiplier(),
-                y + CONFIG.titleButtonVerticalOffset() * CONFIG.offsetMultiplier(),
-                BROWSE_BUTTON_DIMENSIONS.width,
-                Component.empty(),
-                _ -> BrowseScreen.open(CLIENT),
-                MinecraftHeadsAPI.HEADS.getRandomHead()
+                y + CONFIG.titleButtonVerticalOffset() * CONFIG.offsetMultiplier()
         );
+
+        return button;
     }
 
     public static Button createWideBrowseButton(int width) {

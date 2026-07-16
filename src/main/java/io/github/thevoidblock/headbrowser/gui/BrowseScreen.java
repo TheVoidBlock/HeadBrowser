@@ -44,13 +44,22 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
         super(FlowLayout.class, DataSource.asset(Identifier.fromNamespaceAndPath(MOD_ID, SCREEN_ID)));
     }
 
-    public static void open(Minecraft client) {
+    private static void openInternal(Minecraft client) {
         if(HEADS.data.isEmpty()) {
             client.setScreen(new DownloadingScreen());
             return;
         }
 
         client.setScreen(new BrowseScreen());
+    }
+
+    public static void open(Minecraft client) {
+        if(HeadBrowser.componentsBound()) {
+            BrowseScreen.openInternal(client);
+        } else {
+            client.setScreen(new LoadingScreen(Component.translatable("loading.headbrowser.resources")));
+            HeadBrowser.loadResources().thenAccept(_ -> BrowseScreen.openInternal(client));
+        }
     }
 
     @Override
