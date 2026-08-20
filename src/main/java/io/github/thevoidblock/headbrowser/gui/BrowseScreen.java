@@ -46,18 +46,18 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
 
     private static void openInternal(Minecraft client) {
         if(HEADS.data.isEmpty()) {
-            client.setScreen(new DownloadingScreen());
+            client.gui.setScreen(new DownloadingScreen());
             return;
         }
 
-        client.setScreen(new BrowseScreen());
+        client.gui.setScreen(new BrowseScreen());
     }
 
     public static void open(Minecraft client) {
         if(HeadBrowser.componentsBound()) {
             BrowseScreen.openInternal(client);
         } else {
-            client.setScreen(new LoadingScreen(Component.translatable("loading.headbrowser.resources")));
+            client.gui.setScreen(new LoadingScreen(Component.translatable("loading.headbrowser.resources")));
             HeadBrowser.loadResources().thenAccept(_ -> BrowseScreen.openInternal(client));
         }
     }
@@ -209,11 +209,11 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                             rebuildDynamic();
                         } else favorites.saveHead(head);
                     } else {
-                        CLIENT.setScreen(new HeadInfoScreen(head));
+                        CLIENT.gui.setScreen(new HeadInfoScreen(head));
                     }
                 }
 
-                case 2 -> CLIENT.setScreen(new ConfirmScreen(Component.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
+                case 2 -> CLIENT.gui.setScreen(new ConfirmScreen(Component.translatable("confirm.headbrowser.equip-skin", head.name()), () -> {
                     String skinValue = head.value();
                     byte[] skinValueDecodedBytes = Base64.getDecoder().decode(skinValue);
                     String skinValueDecoded = new String(skinValueDecodedBytes, UTF_8);
@@ -224,7 +224,7 @@ public class BrowseScreen extends BaseUIModelScreen<FlowLayout> {
                     
                     try {
                         URL skinURL = URI.create(skinURLString).toURL();
-                        MinecraftAPI.changeSkin(MinecraftAPI.SKIN_VARIANT.SLIM, skinURL, () -> CLIENT.setScreen(new AlertScreen(Component.translatable("alert.headbrowser.skin-equip", head.name()))));
+                        MinecraftAPI.changeSkin(MinecraftAPI.SKIN_VARIANT.SLIM, skinURL, () -> CLIENT.gui.setScreen(new AlertScreen(Component.translatable("alert.headbrowser.skin-equip", head.name()))));
                     } catch (MalformedURLException e) {
                         error("Attempted to equip skin, but the url was malformed", e);
                     }

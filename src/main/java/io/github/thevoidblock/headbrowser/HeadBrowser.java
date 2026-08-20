@@ -84,7 +84,7 @@ public class HeadBrowser implements ClientModInitializer {
     }
 
     private static void presentError(String message, String error) {
-        CLIENT.setScreen(new ErrorScreen(message, error));
+        CLIENT.gui.setScreen(new ErrorScreen(message, error));
     }
 
     public static void error(String message, Exception e) {
@@ -93,17 +93,17 @@ public class HeadBrowser implements ClientModInitializer {
     }
 
     public static boolean canGetHeadItem() {
-        return CLIENT.player != null && (CLIENT.player.gameMode() == GameType.CREATIVE || CLIENT.isSingleplayer());
+        return CLIENT.player != null && (CLIENT.player.gameMode() == GameType.CREATIVE || CLIENT.hasSingleplayerServer());
     }
 
     public static void getItem(ItemStack item) {
         LocalPlayer player = CLIENT.player;
         if(player == null) return;
-        if(KeyBindings.isKeyPressed(GLFW.GLFW_KEY_LEFT_ALT)) CLIENT.setScreen(new BrowserChildCreativeInventoryScreen(CLIENT, CLIENT.screen));
-        else CLIENT.setScreen(new InventoryScreen(player));
+        if(KeyBindings.isKeyPressed(GLFW.GLFW_KEY_LEFT_ALT)) CLIENT.gui.setScreen(new BrowserChildCreativeInventoryScreen(CLIENT, CLIENT.gui.screen()));
+        else CLIENT.gui.setScreen(new InventoryScreen(player));
         player.containerMenu.setCarried(item);
 
-        if(CLIENT.isSingleplayer()) {
+        if(CLIENT.hasSingleplayerServer()) {
             MinecraftServer server = CLIENT.getSingleplayerServer();
             assert server != null;
             ServerPlayer serverPlayer = server.getPlayerList().getPlayer(player.getUUID());

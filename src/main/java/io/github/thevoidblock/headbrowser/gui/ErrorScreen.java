@@ -45,10 +45,10 @@ public class ErrorScreen extends BaseUIModelScreen<FlowLayout> {
         );
 
         rootComponent.childById(ButtonComponent.class, "issues").onPress(_ ->
-                CLIENT.setScreen(new ConfirmLinkScreen(
+                CLIENT.gui.setScreen(new ConfirmLinkScreen(
                         confirmed -> {
                             if(confirmed) Util.getPlatform().openUri(ISSUES_URL);
-                            CLIENT.setScreen(this);
+                            CLIENT.gui.setScreen(this);
                         },
                         Component.literal("confirm.headbrowser.open-issues"),
                         ISSUES_URL,

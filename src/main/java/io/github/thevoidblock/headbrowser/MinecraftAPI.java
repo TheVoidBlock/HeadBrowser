@@ -25,7 +25,7 @@ public class MinecraftAPI {
     public static final String QUERY_NAME_API = "https://api.mojang.com/minecraft/profile/lookup/name/";
 
     public static void changeSkin(SKIN_VARIANT skinVariant, URL skinURL, Runnable onSuccess) {
-        CLIENT.setScreen(new ChangingSkinScreen());
+        CLIENT.gui.setScreen(new ChangingSkinScreen());
 
         OkHttpClient client = new OkHttpClient();
 
@@ -42,14 +42,14 @@ public class MinecraftAPI {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                CLIENT.execute(() -> CLIENT.setScreen(new AlertScreen(Component.translatable("alert.headbrowser.skin-fail-network"))));
+                CLIENT.execute(() -> CLIENT.gui.setScreen(new AlertScreen(Component.translatable("alert.headbrowser.skin-fail-network"))));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 int code = response.code();
                 if(code == 200) CLIENT.execute(onSuccess);
-                else CLIENT.execute(() -> CLIENT.setScreen(new AlertScreen(
+                else CLIENT.execute(() -> CLIENT.gui.setScreen(new AlertScreen(
                         code == 401 ? Component.translatable("alert.headbrowser.skin-fail-session") : Component.translatable("alert.headbrowser.skin-fail-code", code)
                 )));
             }

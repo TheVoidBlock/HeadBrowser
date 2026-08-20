@@ -16,11 +16,11 @@ public abstract class ChildBaseUIModelScreen<R extends ParentUIComponent> extend
     }
 
     protected ChildBaseUIModelScreen(Class<R> rootComponentClass, @NotNull BaseUIModelScreen.DataSource source) {
-        this(rootComponentClass, source, CLIENT.screen);
+        this(rootComponentClass, source, CLIENT.gui.screen());
     }
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(parent);
+        this.minecraft.gui.setScreen(parent);
     }
 }

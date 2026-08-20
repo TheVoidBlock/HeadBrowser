@@ -32,7 +32,7 @@ public class DownloadingScreen extends BaseUIModelScreen<FlowLayout> {
     public void tick() {
         super.tick();
 
-        if(COMPLETED == -1) this.minecraft.setScreen(new AlertScreen(Component.translatable(format("alert.%s.download-failed", MOD_ID))));
+        if(COMPLETED == -1) this.minecraft.gui.setScreen(new AlertScreen(Component.translatable(format("alert.%s.download-failed", MOD_ID))));
         if(STEPS == 0) return;
 
         if(progressBarBackground != null && progressBarForeground != null) progressBarForeground.horizontalSizing(Sizing.fixed(progressBarBackground.horizontalSizing().get().value / STEPS * COMPLETED));
